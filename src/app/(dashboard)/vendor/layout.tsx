@@ -48,8 +48,8 @@ export default function VendorDashboardLayout({
       <div className="flex-grow ml-64 min-h-screen flex flex-col">
         <header className="h-20 bg-white border-b border-border flex items-center justify-between px-10 sticky top-0 z-40">
           <div>
-             <h2 className="text-lg font-bold text-text-main">Vendor Control Center</h2>
-             <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest mt-0.5">Automated Sales & Inventory</p>
+             <h2 className="text-lg font-bold text-main">Vendor Control Center</h2>
+             <p className="text-[10px] text-muted font-bold uppercase tracking-widest mt-0.5">Automated Sales & Inventory</p>
           </div>
           
           <div className="flex items-center space-x-6">

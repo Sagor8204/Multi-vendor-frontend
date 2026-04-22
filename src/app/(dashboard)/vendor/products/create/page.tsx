@@ -29,8 +29,8 @@ export default function CreateProductPage() {
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="flex justify-between items-center">
         <div>
-           <h1 className="text-3xl font-extrabold text-text-main">Add New Product</h1>
-           <p className="text-text-muted mt-1">Ready to list something new? Fill in the details below.</p>
+           <h1 className="text-3xl font-extrabold text-main">Add New Product</h1>
+           <p className="text-muted mt-1">Ready to list something new? Fill in the details below.</p>
         </div>
         <Button variant="outline">Cancel</Button>
       </div>
@@ -47,11 +47,11 @@ export default function CreateProductPage() {
                 onChange={handleChange}
               />
               <div className="space-y-1.5">
-                <label className="text-sm font-semibold text-text-main">Description</label>
+                <label className="text-sm font-semibold text-main">Description</label>
                 <textarea 
                   id="description"
                   rows={6}
-                  className="w-full bg-input border border-border text-text-main rounded-md px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-text-muted/50"
+                  className="w-full bg-input border border-border text-main rounded-md px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-muted/50"
                   placeholder="Describe your product in detail..."
                   value={formData.description}
                   onChange={handleChange}
@@ -86,10 +86,10 @@ export default function CreateProductPage() {
         <div className="space-y-8">
            <Card title="Category" description="Organize your product.">
               <div className="space-y-1.5">
-                <label className="text-sm font-semibold text-text-main">Product Category</label>
+                <label className="text-sm font-semibold text-main">Product Category</label>
                 <select 
                   id="category"
-                  className="w-full bg-input border border-border text-text-main rounded-md px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                  className="w-full bg-input border border-border text-main rounded-md px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                   value={formData.category}
                   onChange={handleChange}
                 >
@@ -105,8 +105,8 @@ export default function CreateProductPage() {
            <Card title="Images" description="Upload product photos.">
               <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary/50 transition-colors cursor-pointer group">
                  <div className="text-4xl mb-2 opacity-50 group-hover:opacity-100 transition-opacity">📸</div>
-                 <p className="text-xs font-bold text-text-muted group-hover:text-primary transition-colors">Click to Upload Images</p>
-                 <p className="text-[10px] text-text-muted/50 mt-1 uppercase tracking-tighter font-bold">Max 5MB per image</p>
+                 <p className="text-xs font-bold text-muted group-hover:text-primary transition-colors">Click to Upload Images</p>
+                 <p className="text-[10px] text-muted/50 mt-1 uppercase tracking-tighter font-bold">Max 5MB per image</p>
               </div>
            </Card>
 

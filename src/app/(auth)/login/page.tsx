@@ -44,8 +44,8 @@ export default function LoginPage() {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-text-main">Welcome Back</h1>
-        <p className="text-text-muted text-sm mt-1">Please enter your credentials.</p>
+        <h1 className="text-2xl font-bold text-main">Welcome Back</h1>
+        <p className="text-muted text-sm mt-1">Please enter your credentials.</p>
       </div>
       
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -82,7 +82,7 @@ export default function LoginPage() {
         </Button>
       </form>
       
-      <div className="text-center text-sm text-text-muted pt-6 border-t border-border">
+      <div className="text-center text-sm text-muted pt-6 border-t border-border">
         Don't have an account? <Link href="/register" className="text-primary font-bold hover:underline">Create Account</Link>
       </div>
     </div>

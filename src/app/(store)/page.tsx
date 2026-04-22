@@ -1,6 +1,7 @@
 import React from 'react';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { Button } from '@/components/ui/Button';
+import Link from 'next/link';
 
 // Dummy data for initial UI - will be replaced by API fetch later
 const DUMMY_PRODUCTS = [
@@ -20,14 +21,16 @@ export default function StoreHome() {
         <div className="absolute inset-0 z-0 opacity-10 bg-[radial-gradient(var(--primary)_1.5px,transparent_1.5px)] [background-size:24px_24px]"></div>
         <div className="relative z-10 max-w-4xl mx-auto text-center px-6">
           <span className="text-primary font-bold tracking-widest uppercase text-xs mb-4 block">New Season Arrival</span>
-          <h1 className="text-5xl md:text-7xl font-extrabold text-text-main mb-6 tracking-tight leading-tight">
+          <h1 className="text-5xl md:text-7xl font-extrabold text-main mb-6 tracking-tight leading-tight">
              Shop The Best <span className="text-primary underline decoration-secondary/30 underline-offset-8 italic">Vendors</span> Globally
           </h1>
-          <p className="text-lg md:text-xl text-text-muted mb-10 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-muted mb-10 max-w-2xl mx-auto leading-relaxed">
             Discover a curated collection of premium products from thousands of verified sellers. Experience quality, speed, and trust in one place.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="px-10 py-4 text-lg shadow-xl shadow-primary/20">Explore All Products</Button>
+            <Link href="/products">
+              <Button className="px-10 py-4 text-lg shadow-xl shadow-primary/20">Explore All Products</Button>
+            </Link>
             <Button variant="outline" className="px-10 py-4 text-lg">Browse Categories</Button>
           </div>
         </div>
@@ -37,7 +40,7 @@ export default function StoreHome() {
       <section className="bg-white border-b border-border py-6 px-6 sticky top-20 z-40">
         <div className="max-w-7xl mx-auto flex items-center justify-between overflow-x-auto gap-8 no-scrollbar">
            {['All', 'Electronics', 'Fashion', 'Home & Living', 'Furniture', 'Accessories', 'Beauty'].map((cat) => (
-             <span key={cat} className="text-sm font-bold text-text-muted hover:text-primary cursor-pointer whitespace-nowrap transition-colors">
+             <span key={cat} className="text-sm font-bold text-muted hover:text-primary cursor-pointer whitespace-nowrap transition-colors">
                {cat}
              </span>
            ))}
@@ -48,8 +51,8 @@ export default function StoreHome() {
       <section className="max-w-7xl mx-auto px-6 mt-16">
         <div className="flex justify-between items-end mb-10">
           <div>
-            <h2 className="text-3xl font-extrabold text-text-main tracking-tight">Featured Products</h2>
-            <p className="text-text-muted mt-2 text-sm font-medium">Curated selection of this week's top-performing items.</p>
+            <h2 className="text-3xl font-extrabold text-main tracking-tight">Featured Products</h2>
+            <p className="text-muted mt-2 text-sm font-medium">Curated selection of this week's top-performing items.</p>
           </div>
           <Button variant="outline" className="text-xs">View All</Button>
         </div>
@@ -76,7 +79,7 @@ export default function StoreHome() {
           <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 items-center gap-12">
              <div>
                <h2 className="text-4xl font-extrabold tracking-tight mb-4">Start Selling Today</h2>
-               <p className="text-text-muted/80 text-lg mb-8 max-w-lg leading-relaxed">
+               <p className="text-muted/80 text-lg mb-8 max-w-lg leading-relaxed">
                  Join over 50,000 successful vendors on our platform. Access powerful tools, analytics, and a massive global customer base.
                </p>
                <Button variant="secondary" className="px-10 py-4 text-base font-bold shadow-lg shadow-secondary/20 hover:scale-105 transition-transform">

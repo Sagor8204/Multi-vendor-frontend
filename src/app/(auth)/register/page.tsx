@@ -57,8 +57,8 @@ export default function RegisterPage() {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-text-main">Create Account</h1>
-        <p className="text-text-muted text-sm mt-1">Join our marketplace today.</p>
+        <h1 className="text-2xl font-bold text-main">Create Account</h1>
+        <p className="text-muted text-sm mt-1">Join our marketplace today.</p>
       </div>
 
       {/* Role Selection UI */}
@@ -71,8 +71,8 @@ export default function RegisterPage() {
               : 'border-border bg-white hover:border-primary/50'
           }`}
         >
-          <div className={`text-sm font-bold ${role === 'customer' ? 'text-primary' : 'text-text-muted'}`}>Customer</div>
-          <p className="text-[10px] text-text-muted mt-1 leading-tight">Buy products & review stores</p>
+          <div className={`text-sm font-bold ${role === 'customer' ? 'text-primary' : 'text-muted'}`}>Customer</div>
+          <p className="text-[10px] text-muted mt-1 leading-tight">Buy products & review stores</p>
         </div>
         <div 
           onClick={() => setRole('vendor')}
@@ -82,8 +82,8 @@ export default function RegisterPage() {
               : 'border-border bg-white hover:border-secondary/50'
           }`}
         >
-          <div className={`text-sm font-bold ${role === 'vendor' ? 'text-secondary' : 'text-text-muted'}`}>Vendor</div>
-          <p className="text-[10px] text-text-muted mt-1 leading-tight">Sell products & grow business</p>
+          <div className={`text-sm font-bold ${role === 'vendor' ? 'text-secondary' : 'text-muted'}`}>Vendor</div>
+          <p className="text-[10px] text-muted mt-1 leading-tight">Sell products & grow business</p>
         </div>
       </div>
 
@@ -133,7 +133,7 @@ export default function RegisterPage() {
         </Button>
       </form>
 
-      <div className="text-center text-sm text-text-muted pt-2 border-t border-border">
+      <div className="text-center text-sm text-muted pt-2 border-t border-border">
         Already have an account? <Link href="/login" className="text-primary font-bold hover:underline">Login</Link>
       </div>
     </div>

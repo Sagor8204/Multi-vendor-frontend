@@ -17,8 +17,8 @@ export default function VendorProductsPage() {
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-           <h1 className="text-3xl font-extrabold text-text-main tracking-tight">My Products</h1>
-           <p className="text-text-muted mt-1 font-medium">Manage your inventory and track product performance.</p>
+           <h1 className="text-3xl font-extrabold text-main tracking-tight">My Products</h1>
+           <p className="text-muted mt-1 font-medium">Manage your inventory and track product performance.</p>
         </div>
         <Link href="/vendor/products/create">
           <Button className="px-8 py-3 text-sm font-bold shadow-lg shadow-primary/20">+ Add Product</Button>
@@ -30,13 +30,13 @@ export default function VendorProductsPage() {
           <table className="w-full text-left">
             <thead>
               <tr className="bg-background-subtle border-b border-border">
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-text-muted">Product</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-text-muted">Category</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-text-muted">Price</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-text-muted">Stock</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-text-muted">Sales</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-text-muted">Status</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-text-muted text-right">Actions</th>
+                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-muted">Product</th>
+                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-muted">Category</th>
+                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-muted">Price</th>
+                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-muted">Stock</th>
+                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-muted">Sales</th>
+                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-muted">Status</th>
+                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-muted text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -47,22 +47,22 @@ export default function VendorProductsPage() {
                        <div className="w-12 h-12 bg-border/20 rounded-lg overflow-hidden flex-shrink-0">
                           <img src={product.image} className="w-full h-full object-cover" />
                        </div>
-                       <span className="font-bold text-text-main group-hover:text-primary transition-colors">{product.name}</span>
+                       <span className="font-bold text-main group-hover:text-primary transition-colors">{product.name}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="text-xs font-bold text-text-muted uppercase tracking-wider">{product.category}</span>
+                    <span className="text-xs font-bold text-muted uppercase tracking-wider">{product.category}</span>
                   </td>
-                  <td className="px-6 py-4 font-bold text-text-main">
+                  <td className="px-6 py-4 font-bold text-main">
                     ${product.price.toFixed(2)}
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
                        <span className={`w-2 h-2 rounded-full ${product.stock > 10 ? 'bg-success' : product.stock > 0 ? 'bg-warning' : 'bg-error'}`}></span>
-                       <span className="text-sm font-bold text-text-main">{product.stock}</span>
+                       <span className="text-sm font-bold text-main">{product.stock}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 font-bold text-text-main">{product.sales}</td>
+                  <td className="px-6 py-4 font-bold text-main">{product.sales}</td>
                   <td className="px-6 py-4">
                     <span className={`px-3 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-widest ${
                       product.status === 'active' ? 'bg-success/10 text-success' : 'bg-error/10 text-error'
@@ -72,8 +72,8 @@ export default function VendorProductsPage() {
                   </td>
                   <td className="px-6 py-4 text-right">
                      <div className="flex justify-end gap-3">
-                        <button className="text-xs font-bold text-text-muted hover:text-primary transition-colors">Edit</button>
-                        <button className="text-xs font-bold text-text-muted hover:text-error transition-colors">Delete</button>
+                        <button className="text-xs font-bold text-muted hover:text-primary transition-colors">Edit</button>
+                        <button className="text-xs font-bold text-muted hover:text-error transition-colors">Delete</button>
                      </div>
                   </td>
                 </tr>

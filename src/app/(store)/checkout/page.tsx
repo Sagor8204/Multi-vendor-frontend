@@ -27,9 +27,9 @@ export default function CheckoutPage() {
   return (
     <div className="max-w-7xl mx-auto px-6 py-16">
       <div className="flex items-center space-x-4 mb-12">
-         <h1 className="text-4xl font-extrabold text-text-main tracking-tight">Checkout</h1>
+         <h1 className="text-4xl font-extrabold text-main tracking-tight">Checkout</h1>
          <div className="h-2 w-2 bg-text-muted rounded-full"></div>
-         <span className="text-text-muted font-bold uppercase tracking-widest text-xs">Secure Transaction</span>
+         <span className="text-muted font-bold uppercase tracking-widest text-xs">Secure Transaction</span>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -73,8 +73,8 @@ export default function CheckoutPage() {
                  <div className="flex items-center space-x-4">
                     <div className="text-2xl">💳</div>
                     <div>
-                       <div className="font-bold text-text-main">Credit or Debit Card</div>
-                       <div className="text-xs text-text-muted font-medium">Encrypted & Secure SSL Checkout</div>
+                       <div className="font-bold text-main">Credit or Debit Card</div>
+                       <div className="text-xs text-muted font-medium">Encrypted & Secure SSL Checkout</div>
                     </div>
                  </div>
                  <div className="text-primary font-bold text-xs uppercase tracking-widest">Active</div>
@@ -132,7 +132,7 @@ export default function CheckoutPage() {
               </Card>
               
               <div className="p-4 bg-background-subtle rounded-xl border border-border text-center">
-                 <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest">
+                 <p className="text-[10px] text-muted font-bold uppercase tracking-widest">
                     Guaranteed Safe Checkout
                  </p>
                  <div className="flex justify-center gap-2 mt-2 opacity-30 grayscale font-bold text-xs">

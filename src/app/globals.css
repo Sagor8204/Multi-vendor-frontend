@@ -34,44 +34,37 @@
   --radius: 0.5rem;
 }
 
-/* Optional: Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #020617;
-    --background-subtle: #0f172a;
-    --card: #1e293b;
-    --card-border: #334155;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --border: #334155;
-  }
-}
-
 @theme inline {
+  /* Renaming to simple keys to avoid "text-text-..." confusion */
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-hover: var(--secondary-hover);
   --color-secondary-foreground: var(--secondary-foreground);
+  
+  /* Usage: text-main, bg-main */
+  --color-brand: var(--text-main);
+  --color-muted: var(--text-muted);
+  --color-on-dark: var(--text-on-dark);
+  
   --color-background: var(--background);
   --color-background-subtle: var(--background-subtle);
   --color-card: var(--card);
   --color-card-border: var(--card-border);
-  --color-text-main: var(--text-main);
-  --color-text-muted: var(--text-muted);
-  --color-text-on-dark: var(--text-on-dark);
+  
   --color-success: var(--success);
   --color-error: var(--error);
   --color-warning: var(--warning);
   --color-info: var(--info);
+  
   --color-border: var(--border);
   --color-input: var(--input);
   --radius-custom: var(--radius);
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--text-main);
   font-family: Arial, Helvetica, sans-serif;
 }
