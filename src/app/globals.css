@@ -1,26 +1,77 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* --- Primary Brand Colors --- */
+  --primary: #4f46e5;         /* Indigo - Main brand color */
+  --primary-hover: #4338ca;
+  --primary-foreground: #ffffff;
+
+  /* --- Secondary / Accent --- */
+  --secondary: #0d9488;       /* Teal - Good for 'Vendor' actions & growth */
+  --secondary-hover: #0f766e;
+  --secondary-foreground: #ffffff;
+
+  /* --- Background Colors --- */
+  --background: #ffffff;      /* Main page background */
+  --background-subtle: #f8fafc; /* Subtle grey for section backgrounds */
+  --card: #ffffff;
+  --card-border: #e2e8f0;
+
+  /* --- Typography --- */
+  --text-main: #0f172a;       /* Near black for readability */
+  --text-muted: #64748b;      /* Grey for descriptions/labels */
+  --text-on-dark: #ffffff;
+
+  /* --- Status Colors --- */
+  --success: #22c55e;         /* Orders completed, active status */
+  --error: #ef4444;           /* Errors, cancellations */
+  --warning: #f59e0b;         /* Pending orders/approvals */
+  --info: #3b82f6;
+
+  /* --- Layout & Borders --- */
+  --border: #e2e8f0;
+  --input: #f1f5f9;
+  --radius: 0.5rem;
+}
+
+/* Optional: Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #020617;
+    --background-subtle: #0f172a;
+    --card: #1e293b;
+    --card-border: #334155;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border: #334155;
+  }
 }
 
 @theme inline {
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-foreground: var(--secondary-foreground);
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-background-subtle: var(--background-subtle);
+  --color-card: var(--card);
+  --color-card-border: var(--card-border);
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+  --color-text-on-dark: var(--text-on-dark);
+  --color-success: var(--success);
+  --color-error: var(--error);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --radius-custom: var(--radius);
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
+  color: var(--text-main);
   font-family: Arial, Helvetica, sans-serif;
 }
