@@ -1,0 +1,92 @@
+# Multi-Vendor Marketplace - API Documentation for Frontend
+
+Base URL: `http://localhost:8000/api/v1/`
+Response Format: All responses follow this standard structure:
+{
+    "success": boolean,
+    "message": "string",
+    "data": object | array | null,
+    "errors": object | null
+}
+
+---
+
+## 1. Authentication & User Management
+| Action | Method | Endpoint | Auth | Fields |
+| :--- | :--- | :--- | :--- | :--- |
+| Register | POST | `/auth/register` | No | `username`, `email`, `password`, `confirm_password`, `role` (customer/vendor) |
+| Login | POST | `/auth/login` | No | `email`, `password` |
+| Refresh Token | POST | `/auth/refresh` | No | `refresh` (token string) |
+| Logout | POST | `/auth/logout` | Yes | `refresh` (token string) |
+
+---
+
+## 2. Profiles & Addresses
+| Action | Method | Endpoint | Auth | Fields |
+| :--- | :--- | :--- | :--- | :--- |
+| Get My Profile | GET | `/auth/profile/me/` | Yes | N/A |
+| Update My Profile | PUT | `/auth/profile/me/` | Yes | `profile_image` (File), `phone`, `bio`, `date_of_birth` |
+| Get User Profile | GET | `/auth/users/{user_id}/profile/` | Admin | N/A |
+| List Addresses | GET | `/auth/addresses/` | Yes | N/A |
+| Add Address | POST | `/auth/addresses/` | Yes | `full_name`, `phone`, `address_line`, `city`, `postal_code`, `country`, `is_default` |
+| Update Address | PUT | `/auth/addresses/{id}/` | Yes | Same as Add Address (can be partial) |
+| Delete Address | DELETE | `/auth/addresses/{id}/` | Yes | N/A |
+
+---
+
+## 3. Vendor Management
+| Action | Method | Endpoint | Auth | Fields |
+| :--- | :--- | :--- | :--- | :--- |
+| List All Vendors | GET | `/vendor/` | No | N/A |
+| Vendor Detail | GET | `/vendor/{id}/` | No | N/A |
+| Apply as Vendor | POST | `/vendor/apply/` | Yes | `store_name`, `store_description`, `store_logo` (File ID) |
+| My Store Profile | GET | `/vendor/me/` | Vendor | N/A |
+| Update My Store | PUT | `/vendor/me/` | Vendor | `store_name`, `store_description`, `store_logo` (Partial OK) |
+
+---
+
+## 4. Product Catalog
+| Action | Method | Endpoint | Auth | Fields |
+| :--- | :--- | :--- | :--- | :--- |
+| List Products | GET | `/products/` | No | Query Params: `search`, `category`, `vendor` |
+| Product Detail | GET | `/products/{id_or_slug}/` | No | N/A |
+| Create Product | POST | `/products/` | Vendor | `name`, `description`, `category` (ID), `price`, `stock` |
+| Update Product | PUT | `/products/{id_or_slug}/` | Vendor | Same as Create (Partial OK) |
+| Delete Product | DELETE | `/products/{id_or_slug}/` | Vendor | N/A |
+| List Categories | GET | `/products/categories/` | No | N/A |
+| Upload Images | POST | `/products/{id}/images/` | Vendor | `images` (List of objects with `image`, `alt_text`, `is_main`, `order`) |
+| Delete Image | DELETE | `/products/images/{id}/` | Vendor | N/A |
+
+---
+
+## 5. Shopping Cart
+| Action | Method | Endpoint | Auth | Fields |
+| :--- | :--- | :--- | :--- | :--- |
+| Get My Cart | GET | `/cart/` | Yes | N/A |
+| Add to Cart | POST | `/cart/add/` | Yes | `product_id`, `quantity` |
+| Update Quantity| PATCH | `/cart/item/{id}/` | Yes | `quantity` |
+| Remove Item | DELETE | `/cart/item/{id}/` | Yes | N/A |
+| Clear Cart | DELETE | `/cart/clear/` | Yes | N/A |
+
+---
+
+## 6. Orders & Fulfillment
+| Action | Method | Endpoint | Auth | Fields |
+| :--- | :--- | :--- | :--- | :--- |
+| Place Order | POST | `/orders/create/` | Yes | `shipping_address` (ID) |
+| My Orders | GET | `/orders/` | Yes | N/A |
+| Order Details | GET | `/orders/{id}/` | Yes | N/A |
+| Cancel Order | PUT | `/orders/{id}/cancel/` | Yes | N/A (Only if status is pending) |
+| Vendor Orders | GET | `/vendor/orders/` | Vendor | List of orders containing vendor items |
+| Update Item Status| PUT | `/vendor/order-items/{id}/status/` | Vendor | `status` (pending, processing, shipped, delivered, cancelled) |
+
+---
+
+## 7. Reviews & Wishlist
+| Action | Method | Endpoint | Auth | Fields |
+| :--- | :--- | :--- | :--- | :--- |
+| Submit Review | POST | `/reviews/` | Yes | `product` (ID), `rating` (1-5), `comment` |
+| Product Reviews| GET | `/products/{id}/reviews/` | No | N/A |
+| Get Wishlist | GET | `/wishlist/` | Yes | N/A |
+| Add to Wishlist | POST | `/wishlist/add/` | Yes | `product_id` |
+| Remove Wishlist| DELETE | `/wishlist/remove/{product_id}/` | Yes | N/A |

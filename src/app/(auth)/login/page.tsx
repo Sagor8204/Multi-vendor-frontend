@@ -1,37 +1,89 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
 
 export default function LoginPage() {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+    if (errors[id]) {
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[id];
+        return newErrors;
+      });
+    }
+  };
+
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+    if (!formData.email) newErrors.email = 'Email is required';
+    if (!formData.password) newErrors.password = 'Password is required';
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
+    
+    console.log('Logging in with:', formData);
+    alert('Login attempted! (API integration next)');
+  };
+
   return (
     <div className="space-y-6">
       <div className="text-center">
         <h1 className="text-2xl font-bold text-text-main">Welcome Back</h1>
-        <p className="text-text-muted text-sm mt-1">Please enter your details to login.</p>
+        <p className="text-text-muted text-sm mt-1">Please enter your credentials.</p>
       </div>
       
-      <form className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-text-main mb-1.5">Email Address</label>
-          <input 
-            type="email" 
-            placeholder="email@example.com" 
-            className="w-full bg-input border border-border px-4 py-2 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-          />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Input 
+          id="email"
+          label="Email Address" 
+          type="email"
+          placeholder="email@example.com" 
+          value={formData.email}
+          onChange={handleChange}
+          error={errors.email}
+        />
+        <Input 
+          id="password"
+          label="Password" 
+          type="password"
+          placeholder="••••••••" 
+          value={formData.password}
+          onChange={handleChange}
+          error={errors.password}
+        />
+        
+        <div className="flex items-center justify-end">
+          <span className="text-xs font-semibold text-primary cursor-pointer hover:underline">
+            Forgot password?
+          </span>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-text-main mb-1.5">Password</label>
-          <input 
-            type="password" 
-            placeholder="••••••••" 
-            className="w-full bg-input border border-border px-4 py-2 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-          />
-        </div>
-        <button className="w-full bg-primary text-primary-foreground py-2.5 rounded-md font-bold hover:bg-primary-hover transition-colors shadow-sm mt-2">
+
+        <Button 
+          type="submit" 
+          className="w-full py-3 mt-2 text-base tracking-wide"
+        >
           Sign In
-        </button>
+        </Button>
       </form>
       
-      <div className="text-center text-sm text-text-muted mt-6">
-        Don't have an account? <span className="text-primary font-bold cursor-pointer">Register now</span>
+      <div className="text-center text-sm text-text-muted pt-6 border-t border-border">
+        Don't have an account? <Link href="/register" className="text-primary font-bold hover:underline">Create Account</Link>
       </div>
     </div>
   );
