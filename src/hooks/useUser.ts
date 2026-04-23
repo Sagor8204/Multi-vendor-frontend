@@ -5,10 +5,10 @@ import { Address } from '@/types/api/auth';
 export const useUser = () => {
     const queryClient = useQueryClient();
 
-    // --- Profile ---
-    const profileQuery = useQuery({
-        queryKey: ['profile'],
-        queryFn: UserService.getMyProfile,
+    // --- User Info ---
+    const userInfoQuery = useQuery({
+        queryKey: ['user_info'],
+        queryFn: UserService.getUserInfo,
     });
 
     const updateProfileMutation = useMutation({
@@ -48,8 +48,8 @@ export const useUser = () => {
 
     return {
         // Profile
-        profile: profileQuery.data?.data,
-        isLoadingProfile: profileQuery.isLoading,
+        profile: userInfoQuery.data?.data,
+        isLoadingProfile: userInfoQuery.isLoading,
         updateProfile: updateProfileMutation.mutate,
         isUpdatingProfile: updateProfileMutation.isPending,
 

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/hooks/useAuth';
+import { User, Store, ArrowRight } from 'lucide-react';
 
 export default function RegisterPage() {
   const { register, isRegistering } = useAuth();
@@ -20,7 +21,6 @@ export default function RegisterPage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
-    // Clear error when user types
     if (errors[id]) {
       setErrors((prev) => {
         const newErrors = { ...prev };
@@ -50,40 +50,43 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    
     register({ ...formData, role });
   };
 
   return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold text-main">Create Account</h1>
-        <p className="text-muted text-sm mt-1">Join our marketplace today.</p>
+    <div className="animate-in fade-in slide-in-from-right-4 duration-700">
+      <div className="mb-10">
+        <h1 className="text-4xl font-black text-main tracking-tight mb-2">Create Account.</h1>
+        <p className="text-muted font-medium">Join the marketplace to start shopping or selling.</p>
       </div>
 
-      {/* Role Selection UI */}
-      <div className="grid grid-cols-2 gap-4 mb-2">
-        <div 
-          onClick={() => setRole('customer')}
-          className={`cursor-pointer p-4 rounded-lg border-2 transition-all text-center ${
-            role === 'customer' 
-              ? 'border-primary bg-primary/5' 
-              : 'border-border bg-white hover:border-primary/50'
-          }`}
-        >
-          <div className={`text-sm font-bold ${role === 'customer' ? 'text-primary' : 'text-muted'}`}>Customer</div>
-          <p className="text-[10px] text-muted mt-1 leading-tight">Buy products & review stores</p>
-        </div>
-        <div 
-          onClick={() => setRole('vendor')}
-          className={`cursor-pointer p-4 rounded-lg border-2 transition-all text-center ${
-            role === 'vendor' 
-              ? 'border-secondary bg-secondary/5' 
-              : 'border-border bg-white hover:border-secondary/50'
-          }`}
-        >
-          <div className={`text-sm font-bold ${role === 'vendor' ? 'text-secondary' : 'text-muted'}`}>Vendor</div>
-          <p className="text-[10px] text-muted mt-1 leading-tight">Sell products & grow business</p>
+      <div className="space-y-4 mb-8">
+        <label className="text-[10px] font-black text-muted uppercase tracking-[0.2em] block">I want to join as</label>
+        <div className="grid grid-cols-2 gap-4">
+            <div 
+              onClick={() => setRole('customer')}
+              className={`cursor-pointer p-4 rounded-2xl border-2 transition-all relative overflow-hidden group ${
+                role === 'customer' 
+                  ? 'border-primary bg-primary/5' 
+                  : 'border-border bg-white hover:border-primary/30'
+              }`}
+            >
+              <User className={`w-5 h-5 mb-2 ${role === 'customer' ? 'text-primary' : 'text-muted'}`} />
+              <div className={`text-sm font-black ${role === 'customer' ? 'text-primary' : 'text-main'}`}>Customer</div>
+              <p className="text-[10px] text-muted font-medium leading-tight mt-1">Discover & Buy</p>
+            </div>
+            <div 
+              onClick={() => setRole('vendor')}
+              className={`cursor-pointer p-4 rounded-2xl border-2 transition-all relative overflow-hidden group ${
+                role === 'vendor' 
+                  ? 'border-secondary bg-secondary/5' 
+                  : 'border-border bg-white hover:border-secondary/30'
+              }`}
+            >
+              <Store className={`w-5 h-5 mb-2 ${role === 'vendor' ? 'text-secondary' : 'text-muted'}`} />
+              <div className={`text-sm font-black ${role === 'vendor' ? 'text-secondary' : 'text-main'}`}>Vendor</div>
+              <p className="text-[10px] text-muted font-medium leading-tight mt-1">List & Sell</p>
+            </div>
         </div>
       </div>
 
@@ -96,50 +99,57 @@ export default function RegisterPage() {
           onChange={handleChange}
           error={errors.username}
           disabled={isRegistering}
+          className="py-3.5 bg-background-subtle border-transparent focus:bg-white"
         />
         <Input 
           id="email"
           label="Email Address" 
           type="email"
-          placeholder="email@example.com" 
+          placeholder="name@company.com" 
           value={formData.email}
           onChange={handleChange}
           error={errors.email}
           disabled={isRegistering}
+          className="py-3.5 bg-background-subtle border-transparent focus:bg-white"
         />
-        <Input 
-          id="password"
-          label="Password" 
-          type="password"
-          placeholder="••••••••" 
-          value={formData.password}
-          onChange={handleChange}
-          error={errors.password}
-          disabled={isRegistering}
-        />
-        <Input 
-          id="confirm_password"
-          label="Confirm Password" 
-          type="password"
-          placeholder="••••••••" 
-          value={formData.confirm_password}
-          onChange={handleChange}
-          error={errors.confirm_password}
-          disabled={isRegistering}
-        />
+        <div className="grid grid-cols-2 gap-4">
+           <Input 
+             id="password"
+             label="Password" 
+             type="password"
+             placeholder="••••••••" 
+             value={formData.password}
+             onChange={handleChange}
+             error={errors.password}
+             disabled={isRegistering}
+             className="py-3.5 bg-background-subtle border-transparent focus:bg-white text-xs"
+           />
+           <Input 
+             id="confirm_password"
+             label="Confirm" 
+             type="password"
+             placeholder="••••••••" 
+             value={formData.confirm_password}
+             onChange={handleChange}
+             error={errors.confirm_password}
+             disabled={isRegistering}
+             className="py-3.5 bg-background-subtle border-transparent focus:bg-white text-xs"
+           />
+        </div>
         
         <Button 
           type="submit" 
           variant={role === 'vendor' ? 'secondary' : 'primary'}
-          className="w-full py-3 mt-4 text-base tracking-wide"
+          className="w-full py-4 mt-6 text-sm font-black uppercase tracking-widest shadow-2xl shadow-primary/10 flex items-center justify-center space-x-2"
           disabled={isRegistering}
         >
-          {isRegistering ? 'Creating Account...' : `Register as ${role === 'vendor' ? 'Vendor' : 'Customer'}`}
+          <span>{isRegistering ? 'Registering...' : `Join as ${role === 'vendor' ? 'Vendor' : 'Customer'}`}</span>
+          {!isRegistering && <ArrowRight className="w-4 h-4" />}
         </Button>
       </form>
 
-      <div className="text-center text-sm text-muted pt-2 border-t border-border">
-        Already have an account? <Link href="/login" className="text-primary font-bold hover:underline">Login</Link>
+      <div className="mt-10 text-center text-sm font-medium text-muted border-t border-border pt-8">
+        Already have an account? <Link href="/login" className="text-primary font-black hover:underline ml-1">Sign in here</Link>
       </div>
     </div>
   );

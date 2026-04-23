@@ -1,19 +1,23 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { useCartStore } from '@/store/cartStore';
 import { useWishlistStore } from '@/store/wishlistStore';
+import { useAuth } from '@/hooks/useAuth';
 import { useIsMounted } from '@/hooks/useIsMounted';
-import { ShoppingBag, Heart } from 'lucide-react';
+import { ShoppingBag, Heart, User, LogOut, LayoutDashboard, ChevronDown } from 'lucide-react';
+import Image from 'next/image';
 
 export const Header = () => {
   const cartCount = useCartStore((state) => state.cartCount());
   const wishlistCount = useWishlistStore((state) => state.wishlistCount());
+  const { user, isAuthenticated, logout } = useAuth();
   const pathname = usePathname();
   const mounted = useIsMounted();
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const navLinks = [
     { label: 'Home', href: '/' },
@@ -62,14 +66,87 @@ export const Header = () => {
 
           <div className="h-6 w-[1px] bg-border hidden sm:block"></div>
 
-          <div className="flex items-center space-x-3">
-            <Link href="/login" className="hidden sm:block">
-              <Button variant="outline" className="text-xs font-bold border-none hover:bg-transparent hover:text-primary">Log In</Button>
-            </Link>
-            <Link href="/register">
-              <Button className="text-xs px-6 py-2.5 font-bold tracking-wide">Get Started</Button>
-            </Link>
-          </div>
+          {mounted && isAuthenticated && user ? (
+            <div className="relative">
+               <button 
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                className="flex items-center space-x-3 group focus:outline-none cursor-pointer"
+               >
+                 <div className="w-10 h-10 rounded-full bg-primary/10 border-2 border-primary/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm overflow-hidden relative">
+                    {/* If user has profile image, show it, otherwise show initial */}
+                    {user?.profile?.profile_image ? (
+                      <Image 
+                        src={user.profile.profile_image} 
+                        alt="profile" 
+                        fill
+                        unoptimized
+                        className="object-cover"
+                      />
+                    ) : (
+                      <span className="font-black text-xs uppercase tracking-tighter">
+                        {user.username.substring(0, 2)}
+                      </span>
+                    )}
+                 </div>
+                 <div className="hidden lg:block text-left">
+                    <p className="text-[10px] font-black text-muted uppercase tracking-widest leading-none mb-1">Welcome</p>
+                    <div className="flex items-center">
+                       <span className="text-sm font-bold text-main leading-none">{user.username}</span>
+                       <ChevronDown className={`ml-1 w-3 h-3 text-muted transition-transform duration-300 ${isProfileOpen ? 'rotate-180' : ''}`} />
+                    </div>
+                 </div>
+               </button>
+
+               {/* Dropdown Menu */}
+               {isProfileOpen && (
+                 <>
+                   <div className="fixed inset-0 z-10" onClick={() => setIsProfileOpen(false)}></div>
+                   <div className="absolute right-0 mt-3 w-64 bg-white border border-border rounded-2xl shadow-2xl z-20 py-3 animate-in fade-in zoom-in-95 duration-200">
+                      <div className="px-6 py-3 border-b border-border/60 mb-2">
+                         <p className="text-xs font-black text-muted uppercase tracking-widest">{user.role}</p>
+                         <p className="text-sm font-bold text-main truncate">{user.email}</p>
+                      </div>
+
+                      <Link href="/profile" className="flex items-center space-x-3 px-6 py-2.5 text-sm font-bold text-muted hover:text-primary hover:bg-primary/5 transition-all">
+                         <User className="w-4 h-4" />
+                         <span>Account Settings</span>
+                      </Link>
+
+                      {user.role === 'vendor' ? (
+                        <Link href="/vendor" className="flex items-center space-x-3 px-6 py-2.5 text-sm font-bold text-muted hover:text-secondary hover:bg-secondary/5 transition-all text-secondary">
+                           <LayoutDashboard className="w-4 h-4" />
+                           <span>Vendor Dashboard</span>
+                        </Link>
+                      ) : (
+                        <Link href="/profile" className="flex items-center space-x-3 px-6 py-2.5 text-sm font-bold text-muted hover:text-primary hover:bg-primary/5 transition-all">
+                           <ShoppingBag className="w-4 h-4" />
+                           <span>My Orders</span>
+                        </Link>
+                      )}
+
+                      <div className="h-[1px] bg-border/60 my-2 mx-4"></div>
+
+                      <button 
+                        onClick={() => { logout(); setIsProfileOpen(false); }}
+                        className="w-full cursor-pointer flex items-center space-x-3 px-6 py-2.5 text-sm font-bold text-error hover:bg-error/5 transition-all"
+                      >
+                         <LogOut className="w-4 h-4" />
+                         <span>Sign Out</span>
+                      </button>
+                   </div>
+                 </>
+               )}
+            </div>
+          ) : (
+            <div className="flex items-center space-x-3">
+              <Link href="/login" className="hidden sm:block">
+                <Button variant="outline" className="text-xs font-bold border-none hover:bg-transparent hover:text-primary">Log In</Button>
+              </Link>
+              <Link href="/register">
+                <Button className="text-xs px-6 py-2.5 font-bold tracking-wide">Get Started</Button>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </header>

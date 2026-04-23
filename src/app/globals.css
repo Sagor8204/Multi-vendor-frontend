@@ -44,7 +44,7 @@
   --color-secondary-foreground: var(--secondary-foreground);
   
   /* Usage: text-main, bg-main */
-  --color-brand: var(--text-main);
+  --color-main: var(--text-main);
   --color-muted: var(--text-muted);
   --color-on-dark: var(--text-on-dark);
   

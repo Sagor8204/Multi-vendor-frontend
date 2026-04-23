@@ -14,7 +14,7 @@ export const useAuth = () => {
         onSuccess: (response) => {
             if (response.success) {
                 setUser(response.data.user);
-                queryClient.invalidateQueries({ queryKey: ['profile'] });
+                queryClient.invalidateQueries({ queryKey: ['user_info'] });
                 router.push('/');
             }
         },
@@ -38,6 +38,12 @@ export const useAuth = () => {
         },
     });
 
+    const userInfoQuery = useQuery({
+        queryKey: ['user_info'],
+        queryFn: UserService.getUserInfo,
+        enabled: typeof window !== 'undefined' && !!localStorage.getItem('access_token')
+    })
+
     const profileQuery = useQuery({
         queryKey: ['profile'],
         queryFn: UserService.getMyProfile,
@@ -55,7 +61,8 @@ export const useAuth = () => {
 
         logout: logoutMutation.mutate,
         
-        user: profileQuery.data?.data,
-        isLoadingProfile: profileQuery.isLoading,
+        user: userInfoQuery.data?.data,
+        isAuthenticated: true,
+        isLoadingProfile: userInfoQuery.isLoading,
     };
 };

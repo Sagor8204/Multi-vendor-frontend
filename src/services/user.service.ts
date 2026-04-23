@@ -1,8 +1,14 @@
 import api from '@/lib/api/axios';
 import { ApiResponse } from '@/types/api/common';
-import { Profile, Address } from '@/types/api/auth';
+import { Profile, Address, User } from '@/types/api/auth';
 
 export const UserService = {
+    // User Info
+    async getUserInfo(): Promise<ApiResponse<User>> {
+        const response = await api.get('auth/me');
+        return response.data
+    },
+
     // Profile Methods
     async getMyProfile(): Promise<ApiResponse<Profile>> {
         const response = await api.get('auth/profile/me/');

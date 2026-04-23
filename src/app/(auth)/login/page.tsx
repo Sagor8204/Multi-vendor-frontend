@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/hooks/useAuth';
+import { LogIn, ArrowRight } from 'lucide-react';
 
 export default function LoginPage() {
   const { login, isLoggingIn } = useAuth();
@@ -38,56 +39,78 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    
     login(formData);
   };
 
   return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold text-main">Welcome Back</h1>
-        <p className="text-muted text-sm mt-1">Please enter your credentials.</p>
+    <div className="animate-in fade-in slide-in-from-right-4 duration-700">
+      <div className="mb-10">
+        <h1 className="text-4xl font-black text-main tracking-tight mb-2">Welcome back.</h1>
+        <p className="text-muted font-medium">Please enter your details to access your account.</p>
+      </div>
+
+      {/* Social Login Placeholder (Professional sites always have this) */}
+      <div className="grid grid-cols-2 gap-4 mb-8">
+         <button className="flex items-center justify-center space-x-2 py-3 border border-border rounded-xl hover:bg-background-subtle transition-all font-bold text-xs uppercase tracking-widest text-main">
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-4 h-4" />
+            <span>Google</span>
+         </button>
+         <button className="flex items-center justify-center space-x-2 py-3 border border-border rounded-xl hover:bg-background-subtle transition-all font-bold text-xs uppercase tracking-widest text-main">
+            <img src="https://www.svgrepo.com/show/448234/linkedin.svg" className="w-4 h-4" />
+            <span>LinkedIn</span>
+         </button>
+      </div>
+
+      <div className="relative mb-8 text-center">
+         <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-border"></div>
+         </div>
+         <span className="relative z-10 bg-white px-4 text-[10px] font-black text-muted uppercase tracking-[0.2em]">Or continue with email</span>
       </div>
       
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <Input 
           id="email"
           label="Email Address" 
           type="email"
-          placeholder="email@example.com" 
+          placeholder="name@company.com" 
           value={formData.email}
           onChange={handleChange}
           error={errors.email}
           disabled={isLoggingIn}
+          className="py-3.5 bg-background-subtle border-transparent focus:bg-white"
         />
-        <Input 
-          id="password"
-          label="Password" 
-          type="password"
-          placeholder="••••••••" 
-          value={formData.password}
-          onChange={handleChange}
-          error={errors.password}
-          disabled={isLoggingIn}
-        />
-        
-        <div className="flex items-center justify-end">
-          <span className="text-xs font-semibold text-primary cursor-pointer hover:underline">
-            Forgot password?
-          </span>
+        <div className="space-y-1">
+          <Input 
+            id="password"
+            label="Password" 
+            type="password"
+            placeholder="••••••••" 
+            value={formData.password}
+            onChange={handleChange}
+            error={errors.password}
+            disabled={isLoggingIn}
+            className="py-3.5 bg-background-subtle border-transparent focus:bg-white"
+          />
+          <div className="flex justify-end">
+             <span className="text-[10px] font-black text-primary cursor-pointer hover:underline uppercase tracking-widest">
+               Forgot Password?
+             </span>
+          </div>
         </div>
 
         <Button 
           type="submit" 
-          className="w-full py-3 mt-2 text-base tracking-wide"
+          className="w-full py-4 mt-4 text-sm font-black uppercase tracking-widest shadow-2xl shadow-primary/20 flex items-center justify-center space-x-2"
           disabled={isLoggingIn}
         >
-          {isLoggingIn ? 'Signing In...' : 'Sign In'}
+          <span>{isLoggingIn ? 'Authenticating...' : 'Sign In to Account'}</span>
+          {!isLoggingIn && <ArrowRight className="w-4 h-4" />}
         </Button>
       </form>
       
-      <div className="text-center text-sm text-muted pt-6 border-t border-border">
-        Don't have an account? <Link href="/register" className="text-primary font-bold hover:underline">Create Account</Link>
+      <div className="mt-12 text-center text-sm font-medium text-muted">
+        Don't have an account? <Link href="/register" className="text-primary font-black hover:underline ml-1">Create an account</Link>
       </div>
     </div>
   );
