@@ -6,10 +6,10 @@ import { useWishlistStore } from '@/store/wishlistStore';
 import { useCartStore } from '@/store/cartStore';
 import { ProductCard } from '@/components/products/ProductCard';
 import { Button } from '@/components/ui/Button';
+import { Heart } from 'lucide-react';
 
 export default function WishlistPage() {
-  const { items, removeFromWishlist } = useWishlistStore();
-  const addToCart = useCartStore((state) => state.addToCart);
+  const { items } = useWishlistStore();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -21,7 +21,9 @@ export default function WishlistPage() {
   if (items.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-6 py-32 text-center">
-         <div className="text-6xl mb-6 opacity-20 text-secondary">♥</div>
+         <div className="flex justify-center mb-6">
+            <Heart className="w-16 h-16 text-secondary opacity-20" />
+         </div>
          <h1 className="text-3xl font-extrabold text-main">Your wishlist is empty</h1>
          <p className="text-muted mt-2 font-medium">Save items you love and come back to them later.</p>
          <Link href="/products">

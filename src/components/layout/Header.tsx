@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { useCartStore } from '@/store/cartStore';
 import { useWishlistStore } from '@/store/wishlistStore';
 import { useIsMounted } from '@/hooks/useIsMounted';
+import { ShoppingBag, Heart } from 'lucide-react';
 
 export const Header = () => {
   const cartCount = useCartStore((state) => state.cartCount());
@@ -16,6 +17,7 @@ export const Header = () => {
 
   const navLinks = [
     { label: 'Home', href: '/' },
+    { label: 'Categories', href: '/categories' },
     { label: 'Products', href: '/products' },
     { label: 'Vendors', href: '/vendors' },
   ];
@@ -41,18 +43,18 @@ export const Header = () => {
 
         <div className="flex items-center space-x-6">
           <Link href="/wishlist" className="relative group">
-             <span className="text-2xl group-hover:scale-110 transition-transform block">♥</span>
+             <Heart className={`w-6 h-6 transition-transform group-hover:scale-110 ${mounted && wishlistCount > 0 ? 'fill-secondary text-secondary' : 'text-main'}`} />
              {mounted && wishlistCount > 0 && (
-               <span className="absolute -top-1 -right-2 bg-secondary text-white text-[10px] font-extrabold h-4 w-4 rounded-full flex items-center justify-center border border-white">
+               <span className="absolute -top-1.5 -right-2 bg-secondary text-white text-[10px] font-extrabold h-4 w-4 rounded-full flex items-center justify-center border border-white">
                  {wishlistCount}
                </span>
              )}
           </Link>
 
           <Link href="/cart" className="relative group">
-             <span className="text-2xl group-hover:scale-110 transition-transform block">🛒</span>
+             <ShoppingBag className="w-6 h-6 text-main group-hover:scale-110 transition-transform" />
              {mounted && cartCount > 0 && (
-               <span className="absolute -top-1 -right-2 bg-primary text-white text-[10px] font-extrabold h-4 w-4 rounded-full flex items-center justify-center border border-white">
+               <span className="absolute -top-1.5 -right-2 bg-primary text-white text-[10px] font-extrabold h-4 w-4 rounded-full flex items-center justify-center border border-white">
                  {cartCount}
                </span>
              )}

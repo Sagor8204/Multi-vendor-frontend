@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { useCartStore } from '@/store/cartStore';
 import { useWishlistStore } from '@/store/wishlistStore';
 import { useIsMounted } from '@/hooks/useIsMounted';
+import { Heart, Truck, ShieldCheck, RotateCcw, Star } from 'lucide-react';
 
 interface ProductInfoProps {
   product: any;
@@ -43,6 +44,12 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({ product, slug }) => {
     }
   };
 
+  const trustBadges = [
+    { icon: <Truck className="w-6 h-6 text-primary" />, title: 'Free Delivery', sub: 'Orders over $100' },
+    { icon: <ShieldCheck className="w-6 h-6 text-primary" />, title: '2 Year Warranty', sub: 'Full coverage' },
+    { icon: <RotateCcw className="w-6 h-6 text-primary" />, title: '30 Day Return', sub: 'Hassle free' },
+  ];
+
   return (
     <div className="space-y-8">
       <div className="space-y-4">
@@ -57,7 +64,8 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({ product, slug }) => {
            </Link>
            <div className="h-1 w-1 bg-border rounded-full"></div>
            <div className="flex items-center text-warning text-xs font-bold">
-              <span>★ {product.vendor.rating}</span>
+              <Star className="w-3 h-3 fill-warning mr-1" />
+              <span>{product.vendor.rating}</span>
               <span className="text-muted ml-1">({product.reviewsCount} Reviews)</span>
            </div>
         </div>
@@ -120,21 +128,15 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({ product, slug }) => {
              className={`px-6 py-5 transition-colors ${mounted && isInWishlist(product.id) ? 'bg-secondary/10 border-secondary/50 text-secondary' : ''}`}
              onClick={handleWishlistToggle}
            >
-             <span className="text-xl">
-                {mounted && isInWishlist(product.id) ? '♥' : '♡'}
-             </span>
+             <Heart className={`w-6 h-6 ${mounted && isInWishlist(product.id) ? 'fill-secondary text-secondary' : 'text-main'}`} />
            </Button>
          </div>
       </div>
 
       <div className="grid grid-cols-3 gap-4 pt-8 border-t border-border/60">
-         {[
-           { icon: '🚚', title: 'Free Delivery', sub: 'Orders over $100' },
-           { icon: '🛡️', title: '2 Year Warranty', sub: 'Full coverage' },
-           { icon: '🔄', title: '30 Day Return', sub: 'Hassle free' },
-         ].map((item, i) => (
+         {trustBadges.map((item, i) => (
            <div key={i} className="text-center space-y-1">
-              <div className="text-2xl mb-2">{item.icon}</div>
+              <div className="flex justify-center mb-2">{item.icon}</div>
               <div className="text-[10px] font-black text-main uppercase tracking-tighter">{item.title}</div>
               <div className="text-[9px] font-bold text-muted uppercase tracking-tighter">{item.sub}</div>
            </div>

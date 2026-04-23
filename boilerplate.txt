@@ -48,12 +48,12 @@ Response Format: All responses follow this standard structure:
 ## 4. Product Catalog
 | Action | Method | Endpoint | Auth | Fields |
 | :--- | :--- | :--- | :--- | :--- |
-| List Products | GET | `/products/` | No | Query Params: `search`, `category`, `vendor` |
+| List Products | GET | `/products/` | No | Query Params: `search`, `category`, `category_slug`, `vendor` |
 | Product Detail | GET | `/products/{id_or_slug}/` | No | N/A |
 | Create Product | POST | `/products/` | Vendor | `name`, `description`, `category` (ID), `price`, `stock` |
 | Update Product | PUT | `/products/{id_or_slug}/` | Vendor | Same as Create (Partial OK) |
 | Delete Product | DELETE | `/products/{id_or_slug}/` | Vendor | N/A |
-| List Categories | GET | `/products/categories/` | No | N/A |
+| List Categories | GET | `/products/categories/` | No | Query Params: `parent` (ID or `null` for root) |
 | Upload Images | POST | `/products/{id}/images/` | Vendor | `images` (List of objects with `image`, `alt_text`, `is_main`, `order`) |
 | Delete Image | DELETE | `/products/images/{id}/` | Vendor | N/A |
 

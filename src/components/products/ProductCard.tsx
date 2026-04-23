@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
+import { Card } from '../ui/Card';
+import { Button } from '../ui/Button';
 import { useCartStore } from '@/store/cartStore';
 import { useWishlistStore } from '@/store/wishlistStore';
 import Link from 'next/link';
+import { ShoppingCart, Heart, Plus } from 'lucide-react';
 
 interface ProductCardProps {
   id: string | number;
@@ -80,17 +81,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
            onClick={handleWishlistToggle}
            className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-sm hover:scale-110 transition-transform z-10"
         >
-           <span className={`text-lg leading-none ${mounted && isInWishlist(id) ? 'text-secondary' : 'text-muted'}`}>
-              {mounted && isInWishlist(id) ? '♥' : '♡'}
-           </span>
+           <Heart className={`w-4 h-4 ${mounted && isInWishlist(id) ? 'fill-secondary text-secondary' : 'text-muted'}`} />
         </button>
 
         {/* Quick Add Button */}
         <button 
           onClick={handleAddToCart}
-          className="absolute bottom-4 cursor-pointer right-4 bg-white text-main w-10 h-10 rounded-full flex items-center justify-center shadow-xl opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 hover:bg-primary hover:text-white font-bold text-xl z-10"
+          className="absolute bottom-4 cursor-pointer right-4 bg-white text-main w-10 h-10 rounded-full flex items-center justify-center shadow-xl opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 hover:bg-primary hover:text-white z-10"
         >
-          +
+          <Plus className="w-6 h-6" />
         </button>
       </Link>
       
@@ -125,7 +124,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
              onClick={handleAddToCart}
              className="px-4 py-2.5"
            >
-             🛒
+             <ShoppingCart className="w-4 h-4" />
            </Button>
         </div>
       </div>

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useCartStore } from '@/store/cartStore';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { ShoppingBag, Trash2, Plus, Minus, Lock } from 'lucide-react';
 
 export default function CartPage() {
   const cart = useCartStore((state) => state.cart);
@@ -23,7 +24,9 @@ export default function CartPage() {
   if (cartCount === 0) {
     return (
       <div className="max-w-7xl mx-auto px-6 py-32 text-center">
-         <div className="text-6xl mb-6 opacity-20">🛒</div>
+         <div className="flex justify-center mb-6">
+            <ShoppingBag className="w-16 h-16 text-muted opacity-20" />
+         </div>
          <h1 className="text-3xl font-extrabold text-main">Your cart is empty</h1>
          <p className="text-muted mt-2 font-medium">Looks like you haven't added anything yet.</p>
          <Link href="/products">
@@ -56,21 +59,28 @@ export default function CartPage() {
                   </div>
                   
                   <div className="flex items-center justify-center sm:justify-between mt-6">
-                     <div className="flex items-center border border-border rounded-lg bg-background-subtle">
+                     <div className="flex items-center border border-border rounded-lg bg-background-subtle overflow-hidden">
                         <button 
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="px-3 py-1 cursor-pointer text-lg font-bold hover:text-primary transition-colors"
-                        >-</button>
-                        <span className="px-4 py-1 font-bold text-sm min-w-[40px] text-center">{item.quantity}</span>
+                          className="px-3 py-1 cursor-pointer hover:bg-white transition-colors"
+                        >
+                           <Minus className="w-3 h-3" />
+                        </button>
+                        <span className="px-4 py-1 font-bold text-sm min-w-[40px] text-center border-x border-border">{item.quantity}</span>
                         <button 
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="px-3 py-1 cursor-pointer text-lg font-bold hover:text-primary transition-colors"
-                        >+</button>
+                          className="px-3 py-1 cursor-pointer hover:bg-white transition-colors"
+                        >
+                           <Plus className="w-3 h-3" />
+                        </button>
                      </div>
                      <button 
                        onClick={() => removeFromCart(item.id)}
-                       className="text-xs cursor-pointer font-bold text-error hover:underline ml-6"
-                     >Remove Item</button>
+                       className="text-xs cursor-pointer font-bold text-error hover:underline ml-6 flex items-center gap-1.5"
+                     >
+                        <Trash2 className="w-3 h-3" />
+                        Remove Item
+                     </button>
                   </div>
                </div>
             </div>
@@ -109,9 +119,13 @@ export default function CartPage() {
                    </Button>
                  </Link>
                  
-                 <div className="pt-6 text-center">
-                    <p className="text-[10px] text-muted font-bold uppercase tracking-widest leading-relaxed">
-                       Secure SSL encrypted checkout.<br/>All major cards accepted.
+                 <div className="pt-6 text-center flex flex-col items-center">
+                    <div className="flex items-center gap-2 mb-2">
+                       <Lock className="w-3 h-3 text-muted" />
+                       <span className="text-[10px] text-muted font-bold uppercase tracking-widest">Secure SSL Encryption</span>
+                    </div>
+                    <p className="text-[9px] text-muted/60 font-medium leading-relaxed uppercase tracking-tighter">
+                       All major credit cards accepted
                     </p>
                  </div>
               </div>
