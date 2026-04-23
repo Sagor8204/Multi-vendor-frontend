@@ -4,8 +4,10 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function RegisterPage() {
+  const { register, isRegistering } = useAuth();
   const [role, setRole] = useState<'customer' | 'vendor'>('customer');
   const [formData, setFormData] = useState({
     username: '',
@@ -49,9 +51,7 @@ export default function RegisterPage() {
     e.preventDefault();
     if (!validate()) return;
     
-    // API logic will go here
-    console.log('Registering as:', role, formData);
-    alert(`Ready to register as ${role}! (API integration next)`);
+    register({ ...formData, role });
   };
 
   return (
@@ -95,6 +95,7 @@ export default function RegisterPage() {
           value={formData.username}
           onChange={handleChange}
           error={errors.username}
+          disabled={isRegistering}
         />
         <Input 
           id="email"
@@ -104,6 +105,7 @@ export default function RegisterPage() {
           value={formData.email}
           onChange={handleChange}
           error={errors.email}
+          disabled={isRegistering}
         />
         <Input 
           id="password"
@@ -113,6 +115,7 @@ export default function RegisterPage() {
           value={formData.password}
           onChange={handleChange}
           error={errors.password}
+          disabled={isRegistering}
         />
         <Input 
           id="confirm_password"
@@ -122,14 +125,16 @@ export default function RegisterPage() {
           value={formData.confirm_password}
           onChange={handleChange}
           error={errors.confirm_password}
+          disabled={isRegistering}
         />
         
         <Button 
           type="submit" 
           variant={role === 'vendor' ? 'secondary' : 'primary'}
           className="w-full py-3 mt-4 text-base tracking-wide"
+          disabled={isRegistering}
         >
-          Register as {role === 'vendor' ? 'Vendor' : 'Customer'}
+          {isRegistering ? 'Creating Account...' : `Register as ${role === 'vendor' ? 'Vendor' : 'Customer'}`}
         </Button>
       </form>
 

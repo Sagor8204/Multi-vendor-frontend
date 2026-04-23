@@ -4,8 +4,10 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function LoginPage() {
+  const { login, isLoggingIn } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -37,8 +39,7 @@ export default function LoginPage() {
     e.preventDefault();
     if (!validate()) return;
     
-    console.log('Logging in with:', formData);
-    alert('Login attempted! (API integration next)');
+    login(formData);
   };
 
   return (
@@ -57,6 +58,7 @@ export default function LoginPage() {
           value={formData.email}
           onChange={handleChange}
           error={errors.email}
+          disabled={isLoggingIn}
         />
         <Input 
           id="password"
@@ -66,6 +68,7 @@ export default function LoginPage() {
           value={formData.password}
           onChange={handleChange}
           error={errors.password}
+          disabled={isLoggingIn}
         />
         
         <div className="flex items-center justify-end">
@@ -77,8 +80,9 @@ export default function LoginPage() {
         <Button 
           type="submit" 
           className="w-full py-3 mt-2 text-base tracking-wide"
+          disabled={isLoggingIn}
         >
-          Sign In
+          {isLoggingIn ? 'Signing In...' : 'Sign In'}
         </Button>
       </form>
       

@@ -1,14 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useCart } from '@/context/CartContext';
+import React, { useEffect, useState } from 'react';
+import { useCartStore } from '@/store/cartStore';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 
 export default function CheckoutPage() {
-  const { cart, cartTotal, clearCart } = useCart();
+  const cart = useCartStore((state) => state.cart);
+  const cartTotal = useCartStore((state) => state.cartTotal());
+  const clearCart = useCartStore((state) => state.clearCart);
   const [step, setStep] = useState(1);
+  const [mounted, setMounted] = useState(false);
   const [address, setAddress] = useState({
     fullName: '',
     addressLine: '',
@@ -16,6 +19,12 @@ export default function CheckoutPage() {
     postalCode: '',
     country: 'United States',
   });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   const handlePlaceOrder = () => {
     // API logic will go here: POST /orders/create/

@@ -1,13 +1,24 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useCart } from '@/context/CartContext';
+import { useCartStore } from '@/store/cartStore';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 
 export default function CartPage() {
-  const { cart, removeFromCart, updateQuantity, cartTotal, cartCount } = useCart();
+  const cart = useCartStore((state) => state.cart);
+  const removeFromCart = useCartStore((state) => state.removeFromCart);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const cartTotal = useCartStore((state) => state.cartTotal());
+  const cartCount = useCartStore((state) => state.cartCount());
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   if (cartCount === 0) {
     return (
@@ -15,7 +26,7 @@ export default function CartPage() {
          <div className="text-6xl mb-6 opacity-20">🛒</div>
          <h1 className="text-3xl font-extrabold text-main">Your cart is empty</h1>
          <p className="text-muted mt-2 font-medium">Looks like you haven't added anything yet.</p>
-         <Link href="/">
+         <Link href="/products">
            <Button className="mt-8 px-10 py-4">Start Shopping</Button>
          </Link>
       </div>
