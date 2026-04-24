@@ -29,7 +29,7 @@ export const ProfileSidebar = ({ activeTab, setActiveTab, logout }: ProfileSideb
                     <button
                         key={link.id}
                         onClick={() => setActiveTab(link.id)}
-                        className={`w-full flex items-center space-x-3 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all ${
+                        className={`w-full flex cursor-pointer items-center space-x-3 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all ${
                             activeTab === link.id 
                             ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-[1.02]' 
                             : 'text-muted hover:bg-white hover:text-primary border border-transparent hover:border-border/60'

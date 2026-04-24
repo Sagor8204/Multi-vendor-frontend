@@ -9,7 +9,7 @@ import { AddressManager } from '@/components/profile/AddressManager';
 import { OrderHistory } from '@/components/profile/OrderHistory';
 
 export default function ProfilePage() {
-    const { profile, addresses, addAddress, deleteAddress, isLoadingAddresses, isAddingAddress } = useUser();
+    const { profile, updateProfile, isUpdatingProfile, updateUserInfo, isUpdatingUserInfo, addresses, addAddress, deleteAddress, isLoadingAddresses, isAddingAddress } = useUser();
     const { logout } = useAuth();
     const [activeTab, setActiveTab] = useState<'profile' | 'addresses' | 'orders'>('profile');
 
@@ -23,7 +23,15 @@ export default function ProfilePage() {
                 />
 
                 <main className="flex-grow">
-                    {activeTab === 'profile' && <ProfileInfo profile={profile} />}
+                    {activeTab === 'profile' && (
+                        <ProfileInfo 
+                            profile={profile} 
+                            onUpdate={updateProfile}
+                            isUpdating={isUpdatingProfile}
+                            onUpdateUser={updateUserInfo}
+                            isUpdatingUser={isUpdatingUserInfo}
+                        />
+                    )}
                     
                     {activeTab === 'addresses' && (
                         <AddressManager 

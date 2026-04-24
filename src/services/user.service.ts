@@ -3,9 +3,14 @@ import { ApiResponse } from '@/types/api/common';
 import { Profile, Address, User } from '@/types/api/auth';
 
 export const UserService = {
-    // User Info
+    // User Methods
     async getUserInfo(): Promise<ApiResponse<User>> {
         const response = await api.get('auth/me');
+        return response.data
+    },
+
+    async updateUserInfo(data: any): Promise<ApiResponse<User>> {
+        const response = await api.patch("auth/me/", data)
         return response.data
     },
 

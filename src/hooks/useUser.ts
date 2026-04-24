@@ -11,6 +11,13 @@ export const useUser = () => {
         queryFn: UserService.getUserInfo,
     });
 
+    const updateUserInfoMutation = useMutation({
+        mutationFn: (data: any) => UserService.updateUserInfo(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['user_info'] })
+        }
+    })
+
     const updateProfileMutation = useMutation({
         mutationFn: (data: any) => UserService.updateProfile(data),
         onSuccess: () => {
@@ -47,6 +54,10 @@ export const useUser = () => {
     });
 
     return {
+        // user Info
+        updateUserInfo: updateUserInfoMutation.mutate,
+        isUpdatingUserInfo: updateUserInfoMutation.isPending,
+        
         // Profile
         profile: userInfoQuery.data?.data,
         isLoadingProfile: userInfoQuery.isLoading,
