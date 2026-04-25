@@ -21,7 +21,7 @@ export const UserService = {
     },
 
     async updateProfile(data: FormData | any): Promise<ApiResponse<Profile>> {
-        const response = await api.put('auth/profile/me/', data, {
+        const response = await api.patch('auth/profile/me/', data, {
             headers: data instanceof FormData ? { 'Content-Type': 'multipart/form-data' } : {},
         });
         return response.data;
@@ -39,7 +39,7 @@ export const UserService = {
     },
 
     async updateAddress(id: number, data: Partial<Address>): Promise<ApiResponse<Address>> {
-        const response = await api.put(`auth/addresses/${id}/`, data);
+        const response = await api.patch(`auth/addresses/${id}/`, data);
         return response.data;
     },
 

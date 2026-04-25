@@ -9,7 +9,20 @@ import { AddressManager } from '@/components/profile/AddressManager';
 import { OrderHistory } from '@/components/profile/OrderHistory';
 
 export default function ProfilePage() {
-    const { profile, updateProfile, isUpdatingProfile, updateUserInfo, isUpdatingUserInfo, addresses, addAddress, deleteAddress, isLoadingAddresses, isAddingAddress } = useUser();
+    const { 
+        profile, 
+        updateProfile, 
+        isUpdatingProfile, 
+        updateUserInfo, 
+        isUpdatingUserInfo, 
+        addresses, 
+        addAddress, 
+        updateAddress,
+        deleteAddress, 
+        isLoadingAddresses, 
+        isAddingAddress,
+        isUpdatingAddress
+    } = useUser();
     const { logout } = useAuth();
     const [activeTab, setActiveTab] = useState<'profile' | 'addresses' | 'orders'>('profile');
 
@@ -38,7 +51,9 @@ export default function ProfilePage() {
                             addresses={addresses}
                             isLoading={isLoadingAddresses}
                             isAdding={isAddingAddress}
+                            isUpdating={isUpdatingAddress}
                             onAdd={addAddress}
+                            onUpdate={updateAddress}
                             onDelete={deleteAddress}
                         />
                     )}

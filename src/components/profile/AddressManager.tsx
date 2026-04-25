@@ -4,18 +4,48 @@ import React, { useState } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { MapPin, Plus, Trash2, CheckCircle2, Settings } from 'lucide-react';
-import { AddAddressModal } from './AddAddressModal';
+import { AddressModal } from './AddressModal';
 
 interface AddressManagerProps {
     addresses: any[];
     isLoading: boolean;
     isAdding: boolean;
+    isUpdating: boolean;
     onAdd: (data: any) => void;
+    onUpdate: (params: { id: number; data: any }) => void;
     onDelete: (id: number) => void;
 }
 
-export const AddressManager = ({ addresses, isLoading, isAdding, onAdd, onDelete }: AddressManagerProps) => {
+export const AddressManager = ({ 
+    addresses, 
+    isLoading, 
+    isAdding, 
+    isUpdating,
+    onAdd, 
+    onUpdate,
+    onDelete 
+}: AddressManagerProps) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedAddress, setSelectedAddress] = useState<any>(null);
+
+    const handleAddClick = () => {
+        setSelectedAddress(null);
+        setIsModalOpen(true);
+    };
+
+    const handleEditClick = (address: any) => {
+        setSelectedAddress(address);
+        setIsModalOpen(true);
+    };
+
+    const handleSubmit = (data: any) => {
+        if (selectedAddress) {
+            onUpdate({ id: selectedAddress.id, data });
+        } else {
+            onAdd(data);
+        }
+        setIsModalOpen(false);
+    };
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -25,7 +55,7 @@ export const AddressManager = ({ addresses, isLoading, isAdding, onAdd, onDelete
                     <p className="text-sm text-muted font-bold mt-1">Manage where your orders are delivered</p>
                 </div>
                 <Button 
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={handleAddClick}
                     className="rounded-2xl flex items-center space-x-2 h-14 px-6 shadow-lg shadow-primary/20"
                 >
                     <Plus className="w-5 h-5" />
@@ -66,13 +96,16 @@ export const AddressManager = ({ addresses, isLoading, isAdding, onAdd, onDelete
                             </div>
                             
                             <div className="mt-8 flex items-center justify-end space-x-3 border-t border-border/40 pt-6">
-                                <button className="flex items-center space-x-2 px-4 py-2 rounded-xl text-muted hover:text-primary hover:bg-primary/5 transition-all font-bold text-xs">
+                                <button 
+                                    onClick={() => handleEditClick(addr)} 
+                                    className="flex cursor-pointer items-center space-x-2 px-4 py-2 rounded-xl text-muted hover:text-primary hover:bg-primary/5 transition-all font-bold text-xs"
+                                >
                                     <Settings className="w-4 h-4" />
                                     <span>Edit</span>
                                 </button>
                                 <button 
                                     onClick={() => onDelete(addr.id)}
-                                    className="flex items-center space-x-2 px-4 py-2 rounded-xl text-muted hover:text-error hover:bg-error/5 transition-all font-bold text-xs"
+                                    className="flex cursor-pointer items-center space-x-2 px-4 py-2 rounded-xl text-muted hover:text-error hover:bg-error/5 transition-all font-bold text-xs"
                                 >
                                     <Trash2 className="w-4 h-4" />
                                     <span>Remove</span>
@@ -88,7 +121,7 @@ export const AddressManager = ({ addresses, isLoading, isAdding, onAdd, onDelete
                         <h3 className="text-xl font-black text-main">No Addresses Yet</h3>
                         <p className="text-sm text-muted font-bold mt-2 max-w-xs leading-relaxed">Add your first shipping address to experience a faster checkout process!</p>
                         <Button 
-                            onClick={() => setIsModalOpen(true)}
+                            onClick={handleAddClick}
                             className="mt-8 rounded-2xl px-8 h-14 font-black shadow-lg shadow-primary/20"
                         >
                             Add New Address
@@ -97,11 +130,12 @@ export const AddressManager = ({ addresses, isLoading, isAdding, onAdd, onDelete
                 )}
             </div>
 
-            <AddAddressModal 
+            <AddressModal 
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                onAdd={onAdd}
-                isAdding={isAdding}
+                onSubmit={handleSubmit}
+                isLoading={isAdding || isUpdating}
+                initialData={selectedAddress}
             />
         </div>
     );
