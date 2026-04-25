@@ -4,10 +4,17 @@ export interface Category {
     id: number;
     name: string;
     slug: string;
-    description?: string;
-    image?: string;
     parent?: number | null;
-    children?: Category[];
+    description?: string | null;
+    product_count: number;
+}
+
+export interface ProductImage {
+    id: number;
+    image: string;
+    alt_text?: string;
+    is_main: boolean;
+    order?: number;
 }
 
 export interface Product {
@@ -23,9 +30,21 @@ export interface Product {
         store_name: string;
         store_logo?: string;
     };
-    images: {
-        id: number;
-        image: string;
-        is_main: boolean;
-    }[];
+    images: ProductImage[];
+    average_rating?: number;
+    review_count?: number;
 }
+
+export interface Review {
+    id: number;
+    product: number;
+    user: {
+        id: number;
+        username: string;
+        profile_image?: string;
+    };
+    rating: number; // 1-5
+    comment: string;
+    created_at: string;
+}
+

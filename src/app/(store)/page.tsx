@@ -1,28 +1,87 @@
+'use client';
+
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { HomeHero } from '@/components/home/HomeHero';
 import { CategoriesBar } from '@/components/home/CategoriesBar';
 import { HomeCategories } from '@/components/home/HomeCategories';
 import { FeaturedProducts } from '@/components/home/FeaturedProducts';
 import { VendorCTA } from '@/components/home/VendorCTA';
-
-// Dummy data for initial UI - will be replaced by API fetch later
-const DUMMY_PRODUCTS = [
-  { id: 1, slug: 'premium-wireless-headphones', name: 'Premium Wireless Headphones', price: 299, category: 'Electronics', vendor: 'TechNova', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=500&auto=format&fit=crop' },
-  { id: 2, slug: 'minimalist-leather-watch', name: 'Minimalist Leather Watch', price: 150, category: 'Accessories', vendor: 'Timeless', image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=500&auto=format&fit=crop' },
-  { id: 3, slug: 'organic-cotton-tee', name: 'Organic Cotton Tee', price: 45, category: 'Fashion', vendor: 'EcoStyle', image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=500&auto=format&fit=crop' },
-  { id: 4, slug: 'smart-home-hub', name: 'Smart Home Hub', price: 199, category: 'Electronics', vendor: 'TechNova', image: 'https://images.unsplash.com/photo-1558002038-103790319987?q=80&w=500&auto=format&fit=crop' },
-  { id: 5, slug: 'ergonomic-desk-chair', name: 'Ergonomic Desk Chair', price: 350, category: 'Furniture', vendor: 'OfficePro', image: 'https://images.unsplash.com/photo-1505797149-43b0000ee20e?q=80&w=500&auto=format&fit=crop' },
-  { id: 6, slug: 'artisan-coffee-maker', name: 'Artisan Coffee Maker', price: 120, category: 'Kitchen', vendor: 'BrewMaster', image: 'https://images.unsplash.com/photo-1544145945-f904253d0c7b?q=80&w=500&auto=format&fit=crop' },
-];
+import { FeaturedVendors } from '@/components/home/FeaturedVendors';
+import { TrustFeatures } from '@/components/home/TrustFeatures';
+import { ProductService } from '@/services/product.service';
 
 export default function StoreHome() {
+  // Fetch Trending Products
+  const { data: trendingRes, isLoading: trendingLoading } = useQuery({
+    queryKey: ['trending-products'],
+    queryFn: () => ProductService.listProducts({ trending: true }),
+  });
+
+  // Fetch On Sale Products
+  const { data: saleRes, isLoading: saleLoading } = useQuery({
+    queryKey: ['sale-products'],
+    queryFn: () => ProductService.listProducts({ on_sale: true }),
+  });
+
+  const trendingProducts = trendingRes?.data?.slice(0, 4).map(p => ({
+    id: p.id,
+    slug: p.slug,
+    name: p.name,
+    price: p.price,
+    category: p.category.name,
+    vendor: p.vendor.store_name,
+    image: p.images.find(img => img.is_main)?.image || p.images[0]?.image
+  })) || [];
+
+  const saleProducts = saleRes?.data?.slice(0, 4).map(p => ({
+    id: p.id,
+    slug: p.slug,
+    name: p.name,
+    price: p.price,
+    category: p.category.name,
+    vendor: p.vendor.store_name,
+    image: p.images.find(img => img.is_main)?.image || p.images[0]?.image
+  })) || [];
+
   return (
     <div className="pb-20">
       <HomeHero />
       <CategoriesBar />
+      <TrustFeatures />
       <HomeCategories />
-      <FeaturedProducts products={DUMMY_PRODUCTS} />
+      
+      {/* Trending Section */}
+      <section className="mt-12">
+        {trendingLoading ? (
+          <div className="max-w-7xl mx-auto px-6 mt-24 h-64 bg-background-subtle animate-pulse rounded-3xl" />
+        ) : trendingProducts.length > 0 && (
+          <FeaturedProducts products={trendingProducts} />
+        )}
+      </section>
+
+      {/* Featured Vendors */}
+      <FeaturedVendors />
+
+      {/* Flash Sales Section */}
+      <section className="mt-12">
+        {saleLoading ? (
+          <div className="max-w-7xl mx-auto px-6 mt-24 h-64 bg-background-subtle animate-pulse rounded-3xl" />
+        ) : saleProducts.length > 0 && (
+          <div className="bg-background-subtle py-20 mt-32">
+            <div className="max-w-7xl mx-auto px-6 mb-10 text-center md:text-left">
+               <h2 className="text-3xl font-extrabold text-main tracking-tight">Flash Sales</h2>
+               <p className="text-muted mt-2 text-sm font-medium">Limited time offers from our verified partners.</p>
+            </div>
+            <FeaturedProducts products={saleProducts} />
+          </div>
+        )}
+      </section>
+
       <VendorCTA />
     </div>
   );
 }
+
+
+

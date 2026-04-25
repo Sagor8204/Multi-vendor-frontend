@@ -1,55 +1,84 @@
 'use client';
 
 import React from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
 import { ProductImageGallery } from '@/components/products/ProductImageGallery';
 import { ProductInfo } from '@/components/products/ProductInfo';
 import { ProductTabs } from '@/components/products/ProductTabs';
-
-// Dummy data for the professional UI - this would normally come from an API
-const PRODUCT_DATA = {
-  id: '1',
-  name: 'Premium Wireless Noise-Cancelling Headphones',
-  price: 299.00,
-  originalPrice: 399.00,
-  description: 'Experience unparalleled sound quality with our flagship wireless headphones. Featuring industry-leading noise cancellation, 40-hour battery life, and ultra-comfortable protein leather ear pads, these headphones are designed for the modern audiophile.',
-  features: [
-    'Active Noise Cancellation (ANC)',
-    '40-hour Battery Life with Fast Charge',
-    'Bluetooth 5.2 with Multi-device Pairing',
-    'Built-in Studio Quality Microphone',
-    'Hard-shell Travel Case Included'
-  ],
-  specs: {
-    'Driver Size': '40mm Dynamic',
-    'Frequency Response': '20Hz - 20kHz',
-    'Weight': '250g',
-    'Charging Port': 'USB-C',
-  },
-  category: 'Electronics',
-  vendor: {
-    id: 'vn-101',
-    name: 'TechNova Solutions',
-    rating: 4.9,
-    totalSales: '12k+',
-    logo: 'TN'
-  },
-  images: [
-    'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1484704849700-f032a568e944?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?q=80&w=800&auto=format&fit=crop'
-  ],
-  stock: 45,
-  reviewsCount: 128,
-  reviews: [
-    { id: 1, user: 'Alex D.', rating: 5, date: 'October 12, 2025', comment: 'Best headphones I have ever owned. The noise cancellation is unreal.' },
-    { id: 2, user: 'Sarah M.', rating: 4, date: 'September 28, 2025', comment: 'Great sound and very comfortable. Only giving 4 stars because the case is a bit bulky.' }
-  ]
-};
+import { ProductService } from '@/services/product.service';
 
 export default function ProductDetailsPage() {
   const { slug } = useParams();
+  const router = useRouter();
+
+  const { data: productRes, isLoading: productLoading } = useQuery({
+    queryKey: ['product', slug],
+    queryFn: () => ProductService.getProductDetail(slug as string),
+    enabled: !!slug,
+  });
+
+  const product = productRes?.data;
+
+  const { data: reviewsRes, isLoading: reviewsLoading } = useQuery({
+    queryKey: ['product-reviews', product?.id],
+    queryFn: () => ProductService.getProductReviews(product!.id),
+    enabled: !!product?.id,
+  });
+
+  if (productLoading) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-24 animate-pulse">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+          <div className="lg:col-span-7 aspect-[4/3] bg-background-subtle rounded-3xl" />
+          <div className="lg:col-span-5 space-y-8">
+            <div className="h-12 bg-background-subtle rounded-xl w-3/4" />
+            <div className="h-8 bg-background-subtle rounded-xl w-1/4" />
+            <div className="h-32 bg-background-subtle rounded-xl" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!product) return null;
+
+  const reviews = reviewsRes?.data || [];
+
+  // Adapt API data for existing UI components
+  const adaptedProduct = {
+    ...product,
+    originalPrice: product.price * 1.2, // Simulated original price for UI
+    features: [
+      'Genuine Product from Verified Vendor',
+      'High Quality Material',
+      'Secure Packaging',
+      'Standard Manufacturer Warranty'
+    ],
+    specs: {
+      'Category': product.category.name,
+      'Stock Status': product.stock > 0 ? 'In Stock' : 'Out of Stock',
+      'Quantity Available': product.stock,
+      'Vendor': product.vendor.store_name,
+    },
+    vendor: {
+      id: product.vendor.id,
+      name: product.vendor.store_name,
+      rating: product.average_rating || 4.5,
+      totalSales: '100+',
+      logo: product.vendor.store_name.charAt(0).toUpperCase()
+    },
+    images: product.images.map(img => img.image),
+    reviewsCount: product.review_count || reviews.length,
+    reviews: reviews.map(r => ({
+      id: r.id,
+      user: r.user.username,
+      rating: r.rating,
+      date: new Date(r.created_at).toLocaleDateString(),
+      comment: r.comment
+    }))
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -59,7 +88,7 @@ export default function ProductDetailsPage() {
         <span>/</span>
         <Link href="/products" className="hover:text-primary transition-colors">Products</Link>
         <span>/</span>
-        <span className="text-main">{PRODUCT_DATA.category}</span>
+        <span className="text-main">{product.category.name}</span>
       </nav>
 
       <main className="max-w-7xl mx-auto px-6 pb-24">
@@ -67,18 +96,20 @@ export default function ProductDetailsPage() {
           
           {/* Left Column: Image Gallery */}
           <div className="lg:col-span-7">
-            <ProductImageGallery images={PRODUCT_DATA.images} name={PRODUCT_DATA.name} />
+            <ProductImageGallery images={adaptedProduct.images} name={product.name} />
           </div>
 
           {/* Right Column: Product Info & Actions */}
           <div className="lg:col-span-5">
-            <ProductInfo product={PRODUCT_DATA} slug={slug as string} />
+            <ProductInfo product={adaptedProduct} slug={slug as string} />
           </div>
         </div>
 
         {/* Bottom Section: Tabs */}
-        <ProductTabs product={PRODUCT_DATA} />
+        <ProductTabs product={adaptedProduct} />
       </main>
     </div>
   );
 }
+
+

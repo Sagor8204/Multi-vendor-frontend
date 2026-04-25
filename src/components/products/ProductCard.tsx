@@ -79,7 +79,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         {/* Wishlist Toggle Button */}
         <button
            onClick={handleWishlistToggle}
-           className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-sm hover:scale-110 transition-transform z-10"
+           className="absolute cursor-pointer top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-sm hover:scale-110 transition-transform z-10"
         >
            <Heart className={`w-4 h-4 ${mounted && isInWishlist(id) ? 'fill-secondary text-secondary' : 'text-muted'}`} />
         </button>

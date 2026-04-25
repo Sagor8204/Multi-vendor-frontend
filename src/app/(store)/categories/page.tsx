@@ -1,19 +1,32 @@
 'use client';
 
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { CategoryCard } from '@/components/categories/CategoryCard';
-import { Laptop, Shirt, Home, Sparkles, Trophy, BookOpen } from 'lucide-react';
+import { Laptop, Shirt, Home, Sparkles, Trophy, BookOpen, Package } from 'lucide-react';
+import { CategoryService } from '@/services/category.service';
 
-const ROOT_CATEGORIES = [
-  { id: 1, name: 'Electronics', slug: 'electronics', description: 'Latest gadgets and tech innovation.', icon: <Laptop className="w-8 h-8" />, count: 1240 },
-  { id: 2, name: 'Fashion', slug: 'fashion', description: 'Premium apparel and accessories.', icon: <Shirt className="w-8 h-8" />, count: 3500 },
-  { id: 3, name: 'Home & Living', slug: 'home-living', description: 'Modern furniture and decor.', icon: <Home className="w-8 h-8" />, count: 850 },
-  { id: 4, name: 'Beauty', slug: 'beauty', description: 'Skincare and beauty essentials.', icon: <Sparkles className="w-8 h-8" />, count: 420 },
-  { id: 5, name: 'Sports', slug: 'sports', description: 'High performance gear and equipment.', icon: <Trophy className="w-8 h-8" />, count: 210 },
-  { id: 6, name: 'Books', slug: 'books', description: 'Curated collection for every reader.', icon: <BookOpen className="w-8 h-8" />, count: 150 },
-];
+// Icon mapping based on slug or name
+const getIconForCategory = (slug: string) => {
+  const icons: Record<string, React.ReactNode> = {
+    'electronics': <Laptop className="w-8 h-8" />,
+    'fashion': <Shirt className="w-8 h-8" />,
+    'home-living': <Home className="w-8 h-8" />,
+    'beauty': <Sparkles className="w-8 h-8" />,
+    'sports': <Trophy className="w-8 h-8" />,
+    'books': <BookOpen className="w-8 h-8" />,
+  };
+  return icons[slug] || <Package className="w-8 h-8" />;
+};
 
 export default function CategoriesListingPage() {
+  const { data: response, isLoading } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => CategoryService.listCategories(),
+  });
+
+  const categories = response?.data || [];
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-16">
       <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
@@ -21,20 +34,32 @@ export default function CategoriesListingPage() {
          <p className="text-lg text-muted font-medium">Explore our curated collections from thousands of verified independent vendors.</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {ROOT_CATEGORIES.map((cat) => (
-          <CategoryCard 
-            key={cat.id}
-            name={cat.name}
-            slug={cat.slug}
-            description={cat.description}
-            icon={cat.icon as any}
-            productCount={cat.count}
-          />
-        ))}
-      </div>
+      {isLoading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div key={i} className="h-64 rounded-3xl bg-background-subtle animate-pulse" />
+          ))}
+        </div>
+      ) : categories.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {categories.map((cat) => (
+            <CategoryCard 
+              key={cat.id}
+              name={cat.name}
+              slug={cat.slug}
+              description={`${cat.name} products curated for quality.`}
+              icon={getIconForCategory(cat.slug)}
+              productCount={cat.product_count}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-20">
+          <p className="text-muted text-xl font-bold">No categories found.</p>
+        </div>
+      )}
 
-      <div className="mt-32 p-12 rounded-[2rem] bg-text-main text-white relative overflow-hidden">
+      <div className="mt-32 p-12 rounded-[2rem] bg-text-main relative overflow-hidden">
          <div className="absolute top-0 right-0 w-96 h-96 bg-primary opacity-20 blur-[120px]"></div>
          <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
@@ -58,3 +83,5 @@ export default function CategoriesListingPage() {
     </div>
   );
 }
+
+

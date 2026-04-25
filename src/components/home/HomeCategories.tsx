@@ -2,17 +2,29 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
 import { CategoryCard } from '@/components/categories/CategoryCard';
-import { Laptop, Shirt, Home, Sparkles, ArrowRight } from 'lucide-react';
+import { Laptop, Shirt, Home, Sparkles, ArrowRight, Package } from 'lucide-react';
+import { CategoryService } from '@/services/category.service';
 
-const TOP_CATEGORIES = [
-  { id: 1, name: 'Electronics', slug: 'electronics', icon: <Laptop className="w-8 h-8" />, count: 1240 },
-  { id: 2, name: 'Fashion', slug: 'fashion', icon: <Shirt className="w-8 h-8" />, count: 3500 },
-  { id: 3, name: 'Home & Living', slug: 'home-living', icon: <Home className="w-8 h-8" />, count: 850 },
-  { id: 4, name: 'Beauty', slug: 'beauty', icon: <Sparkles className="w-8 h-8" />, count: 420 },
-];
+const getIconForCategory = (slug: string) => {
+  const icons: Record<string, React.ReactNode> = {
+    'electronics': <Laptop className="w-8 h-8" />,
+    'fashion': <Shirt className="w-8 h-8" />,
+    'home-living': <Home className="w-8 h-8" />,
+    'beauty': <Sparkles className="w-8 h-8" />,
+  };
+  return icons[slug] || <Package className="w-8 h-8" />;
+};
 
 export const HomeCategories = () => {
+  const { data: response, isLoading } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => CategoryService.listCategories(),
+  });
+
+  const categories = response?.data?.slice(0, 4) || [];
+
   return (
     <section className="max-w-7xl mx-auto px-6 mt-20">
       <div className="flex justify-between items-end mb-10">
@@ -26,16 +38,24 @@ export const HomeCategories = () => {
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {TOP_CATEGORIES.map((cat) => (
-          <CategoryCard 
-            key={cat.id}
-            name={cat.name}
-            slug={cat.slug}
-            icon={cat.icon}
-            productCount={cat.count}
-          />
-        ))}
+        {isLoading ? (
+          [1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-64 rounded-3xl bg-background-subtle animate-pulse" />
+          ))
+        ) : (
+          categories.map((cat) => (
+            <CategoryCard 
+              key={cat.id}
+              name={cat.name}
+              slug={cat.slug}
+              icon={getIconForCategory(cat.slug)}
+              productCount={0}
+            />
+          ))
+        )}
       </div>
     </section>
   );
 };
+
+

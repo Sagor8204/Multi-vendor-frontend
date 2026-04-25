@@ -1,19 +1,40 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { ProductCard } from '@/components/products/ProductCard';
 import { Input } from '@/components/ui/Input';
-
-const ALL_PRODUCTS = [
-  { id: 1, slug: 'premium-wireless-headphones', name: 'Premium Wireless Headphones', price: 299, category: 'Electronics', vendor: 'TechNova', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=500&auto=format&fit=crop' },
-  { id: 2, slug: 'minimalist-leather-watch', name: 'Minimalist Leather Watch', price: 150, category: 'Accessories', vendor: 'Timeless', image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=500&auto=format&fit=crop' },
-  { id: 3, slug: 'organic-cotton-tee', name: 'Organic Cotton Tee', price: 45, category: 'Fashion', vendor: 'EcoStyle', image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=500&auto=format&fit=crop' },
-  { id: 4, slug: 'smart-home-hub', name: 'Smart Home Hub', price: 199, category: 'Electronics', vendor: 'TechNova', image: 'https://images.unsplash.com/photo-1558002038-103790319987?q=80&w=500&auto=format&fit=crop' },
-  { id: 5, slug: 'ergonomic-desk-chair', name: 'Ergonomic Desk Chair', price: 350, category: 'Furniture', vendor: 'OfficePro', image: 'https://images.unsplash.com/photo-1505797149-43b0000ee20e?q=80&w=500&auto=format&fit=crop' },
-  { id: 6, slug: 'artisan-coffee-maker', name: 'Artisan Coffee Maker', price: 120, category: 'Kitchen', vendor: 'BrewMaster', image: 'https://images.unsplash.com/photo-1544145945-f904253d0c7b?q=80&w=500&auto=format&fit=crop' },
-];
+import { ProductService, ProductListParams } from '@/services/product.service';
+import { CategoryService } from '@/services/category.service';
 
 export default function ProductsPage() {
+  const [filters, setFilters] = useState<ProductListParams>({});
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const { data: categoriesRes } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => CategoryService.listCategories(),
+  });
+
+  const { data: productsRes, isLoading: productsLoading } = useQuery({
+    queryKey: ['products', filters, searchTerm],
+    queryFn: () => ProductService.listProducts({
+      ...filters,
+      search: searchTerm || undefined
+    }),
+    placeholderData: (previousData) => previousData,
+  });
+
+  const categories = categoriesRes?.data || [];
+  const products = productsRes?.data || [];
+
+  const handleCategoryToggle = (categoryId?: number) => {
+    setFilters(prev => ({
+      ...prev,
+      category: prev.category === categoryId ? undefined : categoryId
+    }));
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
       <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-12">
@@ -22,7 +43,12 @@ export default function ProductsPage() {
            <p className="text-muted mt-2 font-medium">Find exactly what you're looking for from our curated catalog.</p>
         </div>
         <div className="w-full md:w-96">
-           <Input placeholder="Search products..." className="bg-white shadow-sm" />
+           <Input 
+             placeholder="Search products..." 
+             className="bg-white shadow-sm" 
+             value={searchTerm}
+             onChange={(e) => setSearchTerm(e.target.value)}
+           />
         </div>
       </div>
 
@@ -32,10 +58,21 @@ export default function ProductsPage() {
            <div>
               <h3 className="font-bold text-main uppercase tracking-widest text-[10px] mb-4">Categories</h3>
               <div className="space-y-2">
-                 {['All Products', 'Electronics', 'Fashion', 'Home', 'Accessories'].map(cat => (
-                   <div key={cat} className="flex items-center gap-3 cursor-pointer group">
-                      <div className="w-4 h-4 border-2 border-border rounded group-hover:border-primary transition-colors"></div>
-                      <span className="text-sm font-semibold text-muted group-hover:text-main transition-colors">{cat}</span>
+                 <div 
+                   onClick={() => handleCategoryToggle(undefined)}
+                   className="flex items-center gap-3 cursor-pointer group"
+                 >
+                    <div className={`w-4 h-4 border-2 rounded transition-colors ${!filters.category ? 'border-primary bg-primary' : 'border-border group-hover:border-primary'}`}></div>
+                    <span className={`text-sm font-semibold transition-colors ${!filters.category ? 'text-main' : 'text-muted group-hover:text-main'}`}>All Products</span>
+                 </div>
+                 {categories.map(cat => (
+                   <div 
+                     key={cat.id} 
+                     onClick={() => handleCategoryToggle(cat.id)}
+                     className="flex items-center gap-3 cursor-pointer group"
+                   >
+                      <div className={`w-4 h-4 border-2 rounded transition-colors ${filters.category === cat.id ? 'border-primary bg-primary' : 'border-border group-hover:border-primary'}`}></div>
+                      <span className={`text-sm font-semibold transition-colors ${filters.category === cat.id ? 'text-main' : 'text-muted group-hover:text-main'}`}>{cat.name}</span>
                    </div>
                  ))}
               </div>
@@ -54,12 +91,39 @@ export default function ProductsPage() {
         </aside>
 
         {/* Product Grid */}
-        <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-           {ALL_PRODUCTS.map(product => (
-             <ProductCard key={product.id} {...product} />
-           ))}
+        <div className="md:col-span-3">
+          {productsLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[1, 2, 3, 4, 5, 6].map(i => (
+                <div key={i} className="aspect-[4/5] bg-background-subtle animate-pulse rounded-xl" />
+              ))}
+            </div>
+          ) : products.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+               {products.map(product => (
+                 <ProductCard 
+                   key={product.id} 
+                   id={product.id}
+                   name={product.name}
+                   price={product.price}
+                   slug={product.slug}
+                   image={product.images.find(img => img.is_main)?.image || product.images[0]?.image}
+                   category={product.category.name}
+                   vendor={product.vendor.store_name}
+                 />
+               ))}
+            </div>
+          ) : (
+            <div className="py-20 text-center bg-background-subtle rounded-3xl border-2 border-dashed border-border/40">
+                <div className="text-5xl mb-4 opacity-20">🔍</div>
+                <h3 className="text-xl font-bold text-main">No products found</h3>
+                <p className="text-muted font-medium mt-1">Try adjusting your filters or search terms.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
+
+

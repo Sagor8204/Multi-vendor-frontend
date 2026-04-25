@@ -39,7 +39,7 @@ export default function VendorsPage() {
                   
                   <div className="mt-6 flex items-center justify-between">
                      <span className="text-[10px] font-bold text-muted uppercase tracking-widest">{vendor.products} Products</span>
-                     <Button variant="outline" className="text-[10px] font-bold py-2 px-4 group-hover:bg-secondary group-hover:text-white group-hover:border-secondary transition-all">Visit Store</Button>
+                     <Button variant="outline" className="text-[10px] font-bold py-2 px-4 group-hover:bg-secondary group-hover:text-white group-hover:border-secondary transition-all hover:text-secondary">Visit Store</Button>
                   </div>
                </div>
             </div>
