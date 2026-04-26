@@ -28,19 +28,21 @@ const FEATURES = [
 
 export const TrustFeatures = () => {
   return (
-    <section className="max-w-7xl mx-auto px-6 mt-32">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-        {FEATURES.map((f, i) => (
-          <div key={i} className="flex gap-6 items-start group">
-            <div className="shrink-0 w-16 h-16 bg-background-subtle rounded-2xl flex items-center justify-center group-hover:bg-white group-hover:shadow-xl transition-all duration-500">
-              {f.icon}
+    <section className="bg-background-subtle border-y border-border/50 py-10 px-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          {FEATURES.map((f, i) => (
+            <div key={i} className="flex flex-col md:flex-row gap-4 items-center md:items-start text-center md:text-left group cursor-default">
+              <div className="shrink-0 w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:shadow-md transition-all duration-300">
+                {React.cloneElement(f.icon as React.ReactElement, { className: 'w-6 h-6' })}
+              </div>
+              <div>
+                <h3 className="text-xs font-black text-main uppercase tracking-widest mb-1">{f.title}</h3>
+                <p className="text-[11px] text-muted font-bold leading-tight">{f.desc}</p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-extrabold text-main mb-2 tracking-tight">{f.title}</h3>
-              <p className="text-sm text-muted font-medium leading-relaxed">{f.desc}</p>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

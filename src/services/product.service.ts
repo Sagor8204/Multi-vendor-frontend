@@ -36,6 +36,12 @@ export const ProductService = {
         return response.data;
     },
 
+    // List all products with optional filters
+    async vendorProductsList(id: number): Promise<ApiResponse<Product[]>> {
+        const response = await api.get(`products/vendor/${id}/`);
+        return response.data;
+    },
+
     // Get a single product by ID or slug
     async getProductDetail(idOrSlug: string | number): Promise<ApiResponse<Product>> {
         const response = await api.get(`products/${idOrSlug}/`);

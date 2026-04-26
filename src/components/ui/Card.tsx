@@ -5,9 +5,10 @@ interface CardProps {
   title?: string;
   description?: string;
   className?: string;
+  noPadding?: boolean;
 }
 
-export const Card: React.FC<CardProps> = ({ children, title, description, className = '' }) => {
+export const Card: React.FC<CardProps> = ({ children, title, description, className = '', noPadding = false }) => {
   return (
     <div className={`bg-card border border-card-border rounded-lg shadow-sm overflow-hidden ${className}`}>
       {(title || description) && (
@@ -16,7 +17,7 @@ export const Card: React.FC<CardProps> = ({ children, title, description, classN
           {description && <p className="text-sm text-muted mt-1">{description}</p>}
         </div>
       )}
-      <div className="p-6">
+      <div className={noPadding ? '' : 'p-6'}>
         {children}
       </div>
     </div>

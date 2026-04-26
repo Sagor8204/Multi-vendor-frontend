@@ -9,6 +9,8 @@ export interface Vendor {
     owner: number;
     is_verified: boolean;
     rating?: number;
+    product_count?: number;
+    created_at?: string;
 }
 
 export const VendorService = {

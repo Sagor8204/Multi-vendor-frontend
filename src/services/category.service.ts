@@ -8,6 +8,12 @@ export const CategoryService = {
         const params = parentId !== null ? { parent: parentId } : {};
         const response = await api.get('products/categories/', { params });
         return response.data;
+    },
+
+    // Get a single category by ID or slug
+    async getCategoryDetail(idOrSlug: string | number): Promise<ApiResponse<Category>> {
+        const response = await api.get(`products/categories/${idOrSlug}/`);
+        return response.data;
     }
 };
 

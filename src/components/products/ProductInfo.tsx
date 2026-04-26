@@ -6,7 +6,9 @@ import { Button } from '@/components/ui/Button';
 import { useCartStore } from '@/store/cartStore';
 import { useWishlistStore } from '@/store/wishlistStore';
 import { useIsMounted } from '@/hooks/useIsMounted';
-import { Heart, Truck, ShieldCheck, RotateCcw, Star } from 'lucide-react';
+import { Badge } from '../ui/Badge';
+import { Card } from '../ui/Card';
+import { Heart, Truck, ShieldCheck, Star, Minus, Plus, Share2, Info } from 'lucide-react';
 
 interface ProductInfoProps {
   product: any;
@@ -44,101 +46,110 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({ product, slug }) => {
     }
   };
 
-  const trustBadges = [
-    { icon: <Truck className="w-6 h-6 text-primary" />, title: 'Free Delivery', sub: 'Orders over $100' },
-    { icon: <ShieldCheck className="w-6 h-6 text-primary" />, title: '2 Year Warranty', sub: 'Full coverage' },
-    { icon: <RotateCcw className="w-6 h-6 text-primary" />, title: '30 Day Return', sub: 'Hassle free' },
-  ];
-
   return (
-    <div className="space-y-8">
-      <div className="space-y-4">
-        <div className="flex items-center space-x-4">
-           <Link href={`/vendors/${product.vendor.id}`} className="group flex items-center space-x-2">
-              <div className="w-6 h-6 bg-secondary/10 rounded-lg flex items-center justify-center text-[10px] font-bold text-secondary group-hover:bg-secondary group-hover:text-white transition-all">
+    <div className="flex flex-col h-full">
+      {/* Header Info */}
+      <div className="space-y-4 mb-8">
+        <div className="flex items-center justify-between">
+           <Link href={`/vendors/${product.vendor.id}`} className="group flex items-center gap-2">
+              <div className="w-5 h-5 bg-primary/5 rounded flex items-center justify-center text-[8px] font-bold text-primary group-hover:bg-primary group-hover:text-white transition-all">
                  {product.vendor.logo}
               </div>
-              <span className="text-xs font-bold text-muted group-hover:text-secondary transition-colors uppercase tracking-widest">
+              <span className="text-[11px] font-bold text-muted group-hover:text-primary transition-colors uppercase tracking-[0.15em]">
                  {product.vendor.name}
               </span>
            </Link>
-           <div className="h-1 w-1 bg-border rounded-full"></div>
-           <div className="flex items-center text-warning text-xs font-bold">
-              <Star className="w-3 h-3 fill-warning mr-1" />
-              <span>{product.vendor.rating}</span>
-              <span className="text-muted ml-1">({product.reviewsCount} Reviews)</span>
-           </div>
+           <button className="p-2 hover:bg-background-subtle rounded-full transition-colors">
+              <Share2 className="w-4 h-4 text-muted" />
+           </button>
         </div>
 
-        <h1 className="text-4xl md:text-5xl font-black text-main tracking-tight leading-tight">
+        <h1 className="text-3xl md:text-4xl font-black text-main tracking-tight leading-tight">
           {product.name}
         </h1>
         
-        <div className="flex items-end space-x-4">
-          <span className="text-4xl font-black text-primary tracking-tighter">${product.price}</span>
-          {product.originalPrice && (
-            <span className="text-xl text-muted line-through font-bold mb-1 opacity-50">${product.originalPrice}</span>
-          )}
-          <span className="bg-success/10 text-success text-[10px] font-black px-2 py-1 rounded mb-1.5 uppercase tracking-widest">
-            Save {Math.round((1 - product.price/product.originalPrice) * 100)}%
-          </span>
+        <div className="flex items-center gap-4">
+           <div className="flex items-center gap-1 bg-warning/10 px-2 py-0.5 rounded-md">
+              <Star className="w-3.5 h-3.5 fill-warning text-warning" />
+              <span className="text-xs font-bold text-warning-hover">{product.vendor.rating}</span>
+           </div>
+           <span className="text-xs font-semibold text-muted underline underline-offset-4 cursor-pointer hover:text-primary transition-colors">
+             {product.reviewsCount} verified reviews
+           </span>
         </div>
       </div>
 
-      <p className="text-muted leading-relaxed font-medium">
-        {product.description}
-      </p>
+      {/* Pricing and Quick Actions Card */}
+      <Card noPadding className="border-border/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] mb-8">
+         <div className="p-6 space-y-6">
+            <div className="flex items-baseline gap-3">
+               <span className="text-4xl font-black text-main tracking-tighter">${product.price}</span>
+               {product.originalPrice && (
+                 <span className="text-lg text-muted line-through font-bold opacity-40">${product.originalPrice}</span>
+               )}
+               <Badge variant="success" className="ml-auto">Best Price</Badge>
+            </div>
 
-      <div className="space-y-6 pt-6 border-t border-border/60">
-         <div className="flex items-center space-x-8">
-            <div className="space-y-2">
-               <label className="text-[10px] font-black text-muted uppercase tracking-widest">Quantity</label>
-               <div className="flex items-center border border-border rounded-xl bg-background-subtle p-1">
-                  <button 
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-10 h-10 flex items-center justify-center font-bold text-lg hover:text-primary transition-colors"
-                  >-</button>
-                  <span className="w-12 text-center font-black text-main">{quantity}</span>
-                  <button 
-                    onClick={() => setQuantity(quantity + 1)}
-                    className="w-10 h-10 flex items-center justify-center font-bold text-lg hover:text-primary transition-colors"
-                  >+</button>
+            <div className="space-y-4">
+               <div>
+                  <label className="text-[10px] font-black text-muted uppercase tracking-widest block mb-3">Select Quantity</label>
+                  <div className="flex items-center w-fit border border-border rounded-xl p-1 bg-background-subtle/50">
+                     <button 
+                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                       className="w-9 h-9 flex items-center justify-center hover:bg-white hover:shadow-sm rounded-lg transition-all"
+                     ><Minus className="w-4 h-4" /></button>
+                     <span className="w-12 text-center font-bold text-sm text-main">{quantity}</span>
+                     <button 
+                       onClick={() => setQuantity(quantity + 1)}
+                       className="w-9 h-9 flex items-center justify-center hover:bg-white hover:shadow-sm rounded-lg transition-all"
+                     ><Plus className="w-4 h-4" /></button>
+                  </div>
+               </div>
+
+               <div className="flex gap-3 pt-2">
+                  <Button 
+                    onClick={handleAddToCart}
+                    className="flex-grow py-4 text-sm font-bold uppercase tracking-widest"
+                  >
+                    Add to Cart
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className={`px-4 py-4 border-2 ${mounted && isInWishlist(product.id) ? 'bg-error/5 border-error/20 text-error' : ''}`}
+                    onClick={handleWishlistToggle}
+                  >
+                    <Heart className={`w-5 h-5 ${mounted && isInWishlist(product.id) ? 'fill-error text-error' : 'text-main'}`} />
+                  </Button>
                </div>
             </div>
-            <div className="space-y-2">
-               <label className="text-[10px] font-black text-muted uppercase tracking-widest">Availability</label>
-               <div className="h-12 flex items-center">
-                  <span className="flex items-center text-xs font-bold text-success">
-                     <span className="w-2 h-2 bg-success rounded-full mr-2 animate-pulse"></span>
-                     {product.stock} Units In Stock
-                  </span>
+
+            <div className="pt-6 border-t border-border/60 flex items-center justify-between">
+               <div className="flex items-center gap-2 text-xs font-bold text-success">
+                  <div className="w-1.5 h-1.5 bg-success rounded-full animate-pulse"></div>
+                  In Stock & Ready to ship
+               </div>
+               <div className="text-[10px] font-bold text-muted flex items-center gap-1">
+                  <Info className="w-3 h-3" />
+                  Secure checkout
                </div>
             </div>
          </div>
+      </Card>
 
-         <div className="flex gap-4">
-           <Button 
-             onClick={handleAddToCart}
-             className="flex-grow py-5 text-base font-black uppercase tracking-widest shadow-2xl shadow-primary/20"
-           >
-             Add To Shopping Bag
-           </Button>
-           <Button 
-             variant="outline" 
-             className={`px-6 py-5 transition-colors ${mounted && isInWishlist(product.id) ? 'bg-secondary/10 border-secondary/50 text-secondary' : ''}`}
-             onClick={handleWishlistToggle}
-           >
-             <Heart className={`w-6 h-6 ${mounted && isInWishlist(product.id) ? 'fill-secondary text-secondary' : 'text-main'}`} />
-           </Button>
-         </div>
-      </div>
-
-      <div className="grid grid-cols-3 gap-4 pt-8 border-t border-border/60">
-         {trustBadges.map((item, i) => (
-           <div key={i} className="text-center space-y-1">
-              <div className="flex justify-center mb-2">{item.icon}</div>
-              <div className="text-[10px] font-black text-main uppercase tracking-tighter">{item.title}</div>
-              <div className="text-[9px] font-bold text-muted uppercase tracking-tighter">{item.sub}</div>
+      {/* Trust Features Bar */}
+      <div className="grid grid-cols-1 gap-4">
+         {[
+           { icon: <Truck className="w-4 h-4" />, title: 'Free Global Shipping', sub: 'On all orders above $50.00' },
+           { icon: <ShieldCheck className="w-4 h-4" />, title: 'Buyer Protection', sub: '30-day money-back guarantee' },
+         ].map((item, i) => (
+           <div key={i} className="flex gap-4 p-4 rounded-2xl bg-background-subtle/50 border border-border/40 group hover:border-primary/20 transition-colors">
+              <div className="shrink-0 w-10 h-10 bg-white rounded-xl flex items-center justify-center text-primary shadow-sm border border-border/40 group-hover:scale-110 transition-transform">
+                 {item.icon}
+              </div>
+              <div className="flex flex-col justify-center">
+                 <div className="text-xs font-black text-main uppercase tracking-tight">{item.title}</div>
+                 <div className="text-[10px] font-semibold text-muted">{item.sub}</div>
+              </div>
            </div>
          ))}
       </div>

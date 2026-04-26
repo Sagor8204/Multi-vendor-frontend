@@ -3,7 +3,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { HomeHero } from '@/components/home/HomeHero';
-import { CategoriesBar } from '@/components/home/CategoriesBar';
 import { HomeCategories } from '@/components/home/HomeCategories';
 import { FeaturedProducts } from '@/components/home/FeaturedProducts';
 import { VendorCTA } from '@/components/home/VendorCTA';
@@ -47,38 +46,47 @@ export default function StoreHome() {
   return (
     <div className="pb-20">
       <HomeHero />
-      <CategoriesBar />
       <TrustFeatures />
+      
+      {/* Home Categories */}
       <HomeCategories />
       
       {/* Trending Section */}
-      <section className="mt-12">
+      <section className="mt-24 md:mt-32">
         {trendingLoading ? (
-          <div className="max-w-7xl mx-auto px-6 mt-24 h-64 bg-background-subtle animate-pulse rounded-3xl" />
+          <div className="max-w-7xl mx-auto px-6 h-64 bg-background-subtle animate-pulse rounded-3xl" />
         ) : trendingProducts.length > 0 && (
-          <FeaturedProducts products={trendingProducts} />
+          <FeaturedProducts 
+            products={trendingProducts} 
+            title="Trending Now"
+            subtitle="The most popular items from our community this week."
+          />
         )}
       </section>
 
       {/* Featured Vendors */}
-      <FeaturedVendors />
+      <div className="mt-32">
+        <FeaturedVendors />
+      </div>
 
       {/* Flash Sales Section */}
-      <section className="mt-12">
+      <section className="mt-32">
         {saleLoading ? (
-          <div className="max-w-7xl mx-auto px-6 mt-24 h-64 bg-background-subtle animate-pulse rounded-3xl" />
+          <div className="max-w-7xl mx-auto px-6 h-64 bg-background-subtle animate-pulse rounded-3xl" />
         ) : saleProducts.length > 0 && (
-          <div className="bg-background-subtle py-20 mt-32">
-            <div className="max-w-7xl mx-auto px-6 mb-10 text-center md:text-left">
-               <h2 className="text-3xl font-extrabold text-main tracking-tight">Flash Sales</h2>
-               <p className="text-muted mt-2 text-sm font-medium">Limited time offers from our verified partners.</p>
-            </div>
-            <FeaturedProducts products={saleProducts} />
+          <div className="bg-background-subtle py-24">
+            <FeaturedProducts 
+              products={saleProducts} 
+              title="Flash Sales"
+              subtitle="Limited time offers from our verified partners."
+            />
           </div>
         )}
       </section>
 
-      <VendorCTA />
+      <div className="mt-10">
+        <VendorCTA />
+      </div>
     </div>
   );
 }

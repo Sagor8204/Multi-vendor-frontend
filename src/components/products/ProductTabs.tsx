@@ -4,6 +4,10 @@ import React, { useState } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 
+import { Badge } from '../ui/Badge';
+import Link from 'next/link';
+import { ShieldCheck } from 'lucide-react';
+
 interface ProductTabsProps {
   product: any;
 }
@@ -19,131 +23,179 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
   };
 
   return (
-    <div className="mt-32">
-      <div className="flex overflow-x-auto space-x-12 border-b border-border mb-12 no-scrollbar">
-        {['description', 'specifications', 'vendor info', 'reviews'].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`pb-4 text-xs font-black uppercase tracking-[0.2em] transition-all relative whitespace-nowrap ${
-              activeTab === tab ? 'text-primary' : 'text-muted hover:text-main'
-            }`}
-          >
-            {tab}
-            {activeTab === tab && (
-              <div className="absolute bottom-0 left-0 w-full h-1 bg-primary rounded-t-full"></div>
-            )}
-          </button>
-        ))}
-      </div>
-
-      <div className="max-w-3xl">
-        {activeTab === 'description' && (
-          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-             <p className="text-lg text-muted leading-relaxed font-medium">
-                {product.description}
-             </p>
-             <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {product.features.map((f: string, i: number) => (
-                  <li key={i} className="flex items-center space-x-3 text-sm font-bold text-main">
-                     <span className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-primary text-[10px]">✓</span>
-                     <span>{f}</span>
-                  </li>
-                ))}
-             </ul>
+    <div className="mt-24 border-t border-border/60 pt-16">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+        {/* Left Side: Tabs Content */}
+        <div className="lg:col-span-8">
+          <div className="flex overflow-x-auto space-x-10 border-b border-border/40 mb-10 no-scrollbar">
+            {['description', 'specifications', 'reviews'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`pb-4 text-[11px] font-black uppercase tracking-[0.2em] transition-all relative whitespace-nowrap ${
+                  activeTab === tab ? 'text-primary' : 'text-muted hover:text-main'
+                }`}
+              >
+                {tab}
+                {activeTab === tab && (
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"></div>
+                )}
+              </button>
+            ))}
           </div>
-        )}
 
-        {activeTab === 'specifications' && (
-          <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-             {Object.entries(product.specs).map(([key, val]: any) => (
-               <div key={key} className="flex justify-between py-4 border-b border-border/40">
-                  <span className="text-xs font-black text-muted uppercase tracking-widest">{key}</span>
-                  <span className="text-sm font-bold text-main">{val}</span>
-               </div>
-             ))}
-          </div>
-        )}
-
-        {activeTab === 'vendor info' && (
-          <Card className="p-8 border-secondary/20 bg-secondary/5 animate-in fade-in slide-in-from-bottom-4 duration-500">
-             <div className="flex items-center space-x-6">
-                <div className="w-20 h-20 bg-secondary text-white rounded-2xl flex items-center justify-center text-3xl font-black shadow-xl">
-                  {product.vendor.logo}
-                </div>
-                <div className="space-y-2">
-                   <h3 className="text-2xl font-black text-main tracking-tight">{product.vendor.name}</h3>
-                   <div className="flex items-center space-x-4">
-                      <span className="text-xs font-bold text-secondary uppercase tracking-widest">Verified Vendor</span>
-                      <div className="h-1 w-1 bg-secondary/30 rounded-full"></div>
-                      <span className="text-xs font-bold text-muted uppercase tracking-widest">{product.vendor.totalSales} Sales</span>
-                   </div>
-                </div>
-             </div>
-             <p className="mt-8 text-sm text-muted leading-relaxed font-medium">
-                {product.vendor.name} is a premier vendor committed to excellence and quality.
-             </p>
-             <Button variant="outline" className="mt-8 border-secondary/40 text-secondary hover:bg-secondary hover:text-white uppercase text-[10px] font-black tracking-widest px-8">
-                Visit Store Profile
-             </Button>
-          </Card>
-        )}
-        
-        {activeTab === 'reviews' && (
-          <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-             <div className="space-y-6">
-                <h3 className="text-xl font-bold text-main">Customer Reviews</h3>
-                {product.reviews.map((review: any) => (
-                   <div key={review.id} className="border-b border-border pb-6">
-                      <div className="flex justify-between items-start mb-2">
-                         <div>
-                            <div className="font-bold text-main">{review.user}</div>
-                            <div className="text-warning text-sm mt-0.5">
-                              {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
-                            </div>
-                         </div>
-                         <span className="text-xs text-muted font-bold tracking-widest">{review.date}</span>
+          <div className="min-h-[300px]">
+            {activeTab === 'description' && (
+              <div className="space-y-8 animate-in fade-in duration-500">
+                 <p className="text-base text-muted leading-relaxed font-medium max-w-2xl">
+                    {product.description}
+                 </p>
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {product.features.map((f: string, i: number) => (
+                      <div key={i} className="flex items-center gap-3 p-4 rounded-xl border border-border/40 bg-background-subtle/30">
+                         <div className="w-5 h-5 rounded-full bg-success/10 flex items-center justify-center text-success text-[10px] font-bold">✓</div>
+                         <span className="text-xs font-bold text-main">{f}</span>
                       </div>
-                      <p className="text-sm text-muted mt-3 font-medium leading-relaxed">{review.comment}</p>
+                    ))}
+                 </div>
+              </div>
+            )}
+
+            {activeTab === 'specifications' && (
+              <div className="space-y-1 animate-in fade-in duration-500 max-w-xl">
+                 {Object.entries(product.specs).map(([key, val]: any) => (
+                   <div key={key} className="flex justify-between py-4 border-b border-border/40 last:border-none">
+                      <span className="text-[10px] font-black text-muted uppercase tracking-widest">{key}</span>
+                      <span className="text-sm font-bold text-main">{val}</span>
                    </div>
-                ))}
-             </div>
-             
-             <Card className="p-8 bg-background-subtle border-none">
-                <h3 className="text-lg font-bold text-main mb-6">Write a Review</h3>
-                <form onSubmit={submitReview} className="space-y-4">
-                   <div>
-                      <label className="text-xs font-black text-muted uppercase tracking-widest block mb-2">Rating</label>
-                      <select 
-                        className="w-full bg-white border border-border text-main rounded-md px-4 py-2 outline-none"
-                        value={reviewForm.rating}
-                        onChange={(e) => setReviewForm({...reviewForm, rating: Number(e.target.value)})}
-                      >
-                         <option value="5">5 Stars - Excellent</option>
-                         <option value="4">4 Stars - Good</option>
-                         <option value="3">3 Stars - Average</option>
-                         <option value="2">2 Stars - Poor</option>
-                         <option value="1">1 Star - Terrible</option>
-                      </select>
-                   </div>
-                   <div>
-                      <label className="text-xs font-black text-muted uppercase tracking-widest block mb-2">Your Review</label>
-                      <textarea 
-                         rows={4}
-                         required
-                         placeholder="Tell us what you thought about this product..."
-                         className="w-full bg-white border border-border text-main rounded-md px-4 py-3 outline-none focus:border-primary"
-                         value={reviewForm.comment}
-                         onChange={(e) => setReviewForm({...reviewForm, comment: e.target.value})}
-                      ></textarea>
-                   </div>
-                   <Button type="submit" className="w-full py-4 text-sm font-black uppercase tracking-widest">
-                      Submit Review
-                   </Button>
-                </form>
-             </Card>
+                 ))}
+              </div>
+            )}
+
+            {activeTab === 'reviews' && (
+              <div className="space-y-12 animate-in fade-in duration-500">
+                 <div className="space-y-8">
+                    {product.reviews.length > 0 ? (
+                      product.reviews.map((review: any) => (
+                        <div key={review.id} className="flex gap-6 pb-8 border-b border-border/40 last:border-none">
+                            <div className="w-12 h-12 rounded-full bg-background-subtle flex items-center justify-center text-xs font-bold shrink-0">
+                                {review.user.substring(0, 2).toUpperCase()}
+                            </div>
+                            <div className="flex-grow space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <h4 className="font-bold text-main text-sm">{review.user}</h4>
+                                    <span className="text-[10px] font-bold text-muted uppercase tracking-widest">{review.date}</span>
+                                </div>
+                                <div className="flex text-warning">
+                                    {[...Array(5)].map((_, i) => (
+                                        <Star key={i} className={`w-3 h-3 ${i < review.rating ? 'fill-warning' : 'text-border fill-none'}`} />
+                                    ))}
+                                </div>
+                                <p className="text-sm text-muted font-medium leading-relaxed">{review.comment}</p>
+                            </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="py-12 text-center bg-background-subtle/50 rounded-2xl border border-dashed border-border">
+                         <p className="text-sm font-bold text-muted uppercase tracking-widest">No reviews yet for this product</p>
+                      </div>
+                    )}
+                 </div>
+                 
+                 <Card noPadding className="border-border/60 bg-white overflow-hidden">
+                    <div className="p-8">
+                        <h3 className="text-sm font-black text-main uppercase tracking-widest mb-6">Write a Review</h3>
+                        <form onSubmit={submitReview} className="space-y-6">
+                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="text-[10px] font-black text-muted uppercase tracking-widest block mb-2">Rating</label>
+                                    <div className="flex gap-2">
+                                        {[1,2,3,4,5].map((star) => (
+                                            <button 
+                                                key={star}
+                                                type="button"
+                                                onClick={() => setReviewForm({...reviewForm, rating: star})}
+                                                className={`p-2 rounded-lg border transition-all ${reviewForm.rating >= star ? 'bg-warning/10 border-warning text-warning' : 'border-border text-muted hover:border-warning/50'}`}
+                                            >
+                                                <Star className={`w-4 h-4 ${reviewForm.rating >= star ? 'fill-warning' : ''}`} />
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                           </div>
+                           <div>
+                              <label className="text-[10px] font-black text-muted uppercase tracking-widest block mb-2">Your Review</label>
+                              <textarea 
+                                 rows={4}
+                                 required
+                                 placeholder="Tell others what you think..."
+                                 className="w-full bg-background-subtle/30 border border-border text-sm font-medium text-main rounded-xl px-4 py-3 outline-none focus:border-primary focus:bg-white transition-all"
+                                 value={reviewForm.comment}
+                                 onChange={(e) => setReviewForm({...reviewForm, comment: e.target.value})}
+                              ></textarea>
+                           </div>
+                           <Button type="submit" className="w-fit px-12 py-4 text-xs font-bold uppercase tracking-widest">
+                              Post Review
+                           </Button>
+                        </form>
+                    </div>
+                 </Card>
+              </div>
+            )}
           </div>
-        )}
+        </div>
+
+        {/* Right Side: Vendor Card */}
+        <div className="lg:col-span-4">
+          <div className="sticky top-24 space-y-6">
+            <h3 className="text-[10px] font-black text-muted uppercase tracking-widest">Sold & Shipped by</h3>
+            <Card noPadding className="border-border/60 overflow-hidden hover:shadow-xl transition-all duration-500 group">
+                <div className="p-6 space-y-6">
+                    <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 bg-primary text-white rounded-2xl flex items-center justify-center text-xl font-black shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
+                            {product.vendor.logo}
+                        </div>
+                        <div>
+                            <h4 className="text-lg font-black text-main tracking-tight group-hover:text-primary transition-colors">{product.vendor.name}</h4>
+                            <div className="flex items-center gap-2 mt-1">
+                                <Badge variant="secondary" className="px-1.5 py-0">Verified</Badge>
+                                <span className="text-[10px] font-bold text-muted uppercase">{product.vendor.totalSales} Sales</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p className="text-xs text-muted font-medium leading-relaxed">
+                        Dedicated vendor providing high-quality products and excellent customer service.
+                    </p>
+
+                    <div className="pt-4 flex flex-col gap-2">
+                        <Link href={`/vendors/${product.vendor.id}`}>
+                            <Button variant="outline" className="w-full text-[10px] font-bold uppercase tracking-widest border-2 py-3">
+                                View Store Profile
+                            </Button>
+                        </Link>
+                        <Button variant="outline" className="w-full text-[10px] font-bold uppercase tracking-widest border-transparent hover:border-transparent hover:bg-background-subtle py-2">
+                            Contact Seller
+                        </Button>
+                    </div>
+                </div>
+            </Card>
+
+            <Card noPadding className="bg-primary/5 border-primary/10 p-5">
+                <div className="flex gap-4">
+                    <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-primary shadow-sm border border-primary/10">
+                        <ShieldCheck className="w-4 h-4" />
+                    </div>
+                    <div>
+                        <h4 className="text-[10px] font-black text-main uppercase tracking-tight">Marketplace Guarantee</h4>
+                        <p className="text-[10px] text-muted font-medium mt-1 leading-normal">
+                            Get the item you ordered or your money back. 
+                        </p>
+                    </div>
+                </div>
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
   );
