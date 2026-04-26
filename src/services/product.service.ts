@@ -94,6 +94,12 @@ export const ProductService = {
     async getProductReviews(productId: number): Promise<ApiResponse<Review[]>> {
         const response = await api.get(`products/${productId}/reviews/`);
         return response.data;
+    },
+
+    // Submit a review for a product
+    async submitReview(data: { product: number; rating: number; comment: string }): Promise<ApiResponse<Review>> {
+        const response = await api.post('reviews/', data);
+        return response.data;
     }
 };
 

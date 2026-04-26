@@ -3,10 +3,12 @@
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { ProductService } from '@/services/product.service';
 
 import { Badge } from '../ui/Badge';
 import Link from 'next/link';
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck, Star, Loader2 } from 'lucide-react';
 
 interface ProductTabsProps {
   product: any;
@@ -15,11 +17,33 @@ interface ProductTabsProps {
 export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
   const [activeTab, setActiveTab] = useState('description');
   const [reviewForm, setReviewForm] = useState({ rating: 5, comment: '' });
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (data: { product: number; rating: number; comment: string }) => 
+      ProductService.submitReview(data),
+    onSuccess: () => {
+      // Refresh the reviews list and product details
+      queryClient.invalidateQueries({ queryKey: ['product-reviews', product.id] });
+      queryClient.invalidateQueries({ queryKey: ['product', product.slug] });
+      setReviewForm({ rating: 5, comment: '' });
+      alert('Review Submitted Successfully!');
+    },
+    onError: (error: any) => {
+      const message = error.response?.data?.message || 'Failed to submit review. Please try again.';
+      alert(message);
+    }
+  });
 
   const submitReview = (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Review Submitted Successfully!');
-    setReviewForm({ rating: 5, comment: '' });
+    if (!reviewForm.comment.trim()) return;
+    
+    mutation.mutate({
+      product: product.id,
+      rating: reviewForm.rating,
+      comment: reviewForm.comment
+    });
   };
 
   return (
@@ -79,7 +103,7 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
                       product.reviews.map((review: any) => (
                         <div key={review.id} className="flex gap-6 pb-8 border-b border-border/40 last:border-none">
                             <div className="w-12 h-12 rounded-full bg-background-subtle flex items-center justify-center text-xs font-bold shrink-0">
-                                {review.user.substring(0, 2).toUpperCase()}
+                                {review.user?.substring(0, 2).toUpperCase() || "A"}
                             </div>
                             <div className="flex-grow space-y-2">
                                 <div className="flex justify-between items-center">

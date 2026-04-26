@@ -65,12 +65,13 @@ export default function ProductDetailsPage() {
     vendor: {
       id: product.vendor.id,
       name: product.vendor.store_name,
-      rating: product.average_rating || 4.5,
+      rating: product.vendor.average_rating || 4.5,
       totalSales: '100+',
       logo: product.vendor.store_name.charAt(0).toUpperCase()
     },
     images: product.images.map(img => img.image),
-    reviewsCount: product.review_count || reviews.length,
+    averageRating: product.average_rating || 0,
+    totalReviews: product.total_review || 0,
     reviews: reviews.map(r => ({
       id: r.id,
       user: r.user.username,

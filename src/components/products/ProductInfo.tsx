@@ -69,12 +69,21 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({ product, slug }) => {
         </h1>
         
         <div className="flex items-center gap-4">
-           <div className="flex items-center gap-1 bg-warning/10 px-2 py-0.5 rounded-md">
-              <Star className="w-3.5 h-3.5 fill-warning text-warning" />
-              <span className="text-xs font-bold text-warning-hover">{product.vendor.rating}</span>
+           <div className="flex items-center gap-1.5 bg-warning/10 px-2.5 py-1 rounded-lg">
+              <div className="flex text-warning">
+                 {[...Array(5)].map((_, i) => (
+                    <Star 
+                      key={i} 
+                      className={`w-3.5 h-3.5 ${i < Math.floor(product.averageRating) ? 'fill-warning' : 'text-warning/30'}`} 
+                    />
+                 ))}
+              </div>
+              <span className="text-sm font-bold text-warning-hover">
+                {typeof product.averageRating === 'number' ? product.averageRating.toFixed(1) : product.averageRating}
+              </span>
            </div>
            <span className="text-xs font-semibold text-muted underline underline-offset-4 cursor-pointer hover:text-primary transition-colors">
-             {product.reviewsCount} verified reviews
+             {product.totalReviews} verified reviews
            </span>
         </div>
       </div>
