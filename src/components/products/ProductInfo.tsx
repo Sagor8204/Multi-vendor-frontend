@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { useCartStore } from '@/store/cartStore';
 import { useWishlistStore } from '@/store/wishlistStore';
 import { useIsMounted } from '@/hooks/useIsMounted';
+import toast from 'react-hot-toast';
 import { Badge } from '../ui/Badge';
 import { Card } from '../ui/Card';
 import { Heart, Truck, ShieldCheck, Star, Minus, Plus, Share2, Info } from 'lucide-react';
@@ -29,11 +30,15 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({ product, slug }) => {
       image: product.images[0],
       vendor: product.vendor.name
     }, quantity);
+    toast.success(`${product.name} added to cart!`, {
+      icon: '🛒',
+    });
   };
 
   const handleWishlistToggle = () => {
     if (isInWishlist(product.id)) {
         removeFromWishlist(product.id);
+        toast.success('Removed from wishlist');
     } else {
         addToWishlist({
             id: product.id,
@@ -42,6 +47,9 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({ product, slug }) => {
             image: product.images[0],
             vendor: product.vendor.name,
             slug: slug
+        });
+        toast.success('Added to wishlist', {
+          icon: '❤️',
         });
     }
   };

@@ -3,6 +3,7 @@ import { AuthService } from '@/services/auth.service';
 import { UserService } from '@/services/user.service';
 import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 export const useAuth = () => {
     const queryClient = useQueryClient();
@@ -15,18 +16,30 @@ export const useAuth = () => {
             if (response.success) {
                 setUser(response.data.user);
                 queryClient.invalidateQueries({ queryKey: ['user_info'] });
+                toast.success(`Welcome back, ${response.data.user.username}!`, {
+                    icon: '👋',
+                });
                 router.push('/');
             }
         },
+        onError: (error: any) => {
+            const message = error.response?.data?.message || 'Login failed. Please check your credentials.';
+            toast.error(message);
+        }
     });
 
     const registerMutation = useMutation({
         mutationFn: AuthService.register,
         onSuccess: (response) => {
             if (response.success) {
+                toast.success('Registration successful! Please login to continue.');
                 router.push('/login');
             }
         },
+        onError: (error: any) => {
+            const message = error.response?.data?.message || 'Registration failed. Please try again.';
+            toast.error(message);
+        }
     });
 
     const logoutMutation = useMutation({
@@ -34,8 +47,15 @@ export const useAuth = () => {
         onSuccess: () => {
             logoutStore();
             queryClient.clear();
+            toast.success('Logged out successfully');
             router.push('/login');
         },
+        onError: () => {
+            // Even if API logout fails, we clear local state
+            logoutStore();
+            queryClient.clear();
+            router.push('/login');
+        }
     });
 
     const userInfoQuery = useQuery({

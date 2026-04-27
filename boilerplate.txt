@@ -14,13 +14,10 @@ Response Format: All responses follow this standard structure:
 ## 1. Authentication & User Management
 | Action | Method | Endpoint | Auth | Fields |
 | :--- | :--- | :--- | :--- | :--- |
-| Register | POST | /auth/register | No | username, email, password, confirm_password, 
-ole (customer/vendor) |
+| Register | POST | /auth/register | No | username, email, password, confirm_password, role (customer/vendor) |
 | Login | POST | /auth/login | No | email, password |
-| Refresh Token | POST | /auth/refresh | No | 
-efresh (token string) |
-| Logout | POST | /auth/logout | Yes | 
-efresh (token string) |
+| Refresh Token | POST | /auth/refresh | No | refresh (token string) |
+| Logout | POST | /auth/logout | Yes | refresh (token string) |
 
 ---
 
@@ -52,13 +49,12 @@ efresh (token string) |
 | Action | Method | Endpoint | Auth | Fields |
 | :--- | :--- | :--- | :--- | :--- |
 | List Products | GET | /products/ | No | Query Params: featured, trending, on_sale, ordering (price, -price, created_at), search, category, category_slug, vendor |
+| Advanced Search | GET | /products/search/ | No | Query Params: q (keyword), category (slug), min_price, max_price, sort (price_low, price_high, newest, popular) |
 | Product Detail | GET | /products/{id_or_slug}/ | No | Increments views_count automatically |
-| Create Product | POST | /products/ | Vendor | 
-ame, description, category (ID), price, discount_price, stock, variants (List), specifications (List) |
+| Create Product | POST | /products/ | Vendor | name, description, category (ID), price, discount_price, stock, variants (List), specifications (List) |
 | Update Product | PUT | /products/{id_or_slug}/ | Vendor | Same as Create (Partial OK) |
 | Delete Product | DELETE | /products/{id_or_slug}/ | Vendor | N/A |
-| List Categories | GET | /products/categories/ | No | Query Params: parent (ID or 
-ull for root) |
+| List Categories | GET | /products/categories/ | No | Query Params: parent (ID or null for root) |
 | Upload Images | POST | /products/{id}/images/ | Vendor | images (List of objects with image, alt_text, is_main, order) |
 | Delete Image | DELETE | /products/images/{id}/ | Vendor | N/A |
 
@@ -70,7 +66,7 @@ ull for root) |
     "sku": "T-SHIRT-RED-L",
     "price": "29.99",
     "stock": 50,
-    "attribute_values": [1, 5] 
+    "attribute_values": [1, 5]
   }
 ]
 `
@@ -110,8 +106,7 @@ ull for root) |
 ## 7. Reviews & Wishlist
 | Action | Method | Endpoint | Auth | Fields |
 | :--- | :--- | :--- | :--- | :--- |
-| Submit Review | POST | /reviews/ | Yes | product (ID), 
-ating (1-5), comment |
+| Submit Review | POST | /reviews/ | Yes | product (ID), rating (1-5), comment |
 | Product Reviews| GET | /products/{id}/reviews/ | No | N/A |
 | Get Wishlist | GET | /wishlist/ | Yes | N/A |
 | Add to Wishlist | POST | /wishlist/add/ | Yes | product_id |

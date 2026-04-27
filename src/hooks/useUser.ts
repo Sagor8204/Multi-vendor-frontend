@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { UserService } from '@/services/user.service';
 import { Address } from '@/types/api/auth';
+import toast from 'react-hot-toast';
 
 export const useUser = () => {
     const queryClient = useQueryClient();
@@ -14,7 +15,11 @@ export const useUser = () => {
     const updateUserInfoMutation = useMutation({
         mutationFn: (data: any) => UserService.updateUserInfo(data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['user_info'] })
+            queryClient.invalidateQueries({ queryKey: ['user_info'] });
+            toast.success('Account information updated!');
+        },
+        onError: () => {
+            toast.error('Failed to update account information.');
         }
     })
 
@@ -22,7 +27,11 @@ export const useUser = () => {
         mutationFn: (data: any) => UserService.updateProfile(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
+            toast.success('Profile details updated successfully!');
         },
+        onError: () => {
+            toast.error('Failed to update profile.');
+        }
     });
 
     // --- Addresses ---
@@ -35,7 +44,11 @@ export const useUser = () => {
         mutationFn: (data: Omit<Address, 'id'>) => UserService.addAddress(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['addresses'] });
+            toast.success('New address added!');
         },
+        onError: () => {
+            toast.error('Failed to add address.');
+        }
     });
 
     const updateAddressMutation = useMutation({
@@ -43,14 +56,22 @@ export const useUser = () => {
             UserService.updateAddress(id, data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['addresses'] });
+            toast.success('Address updated!');
         },
+        onError: () => {
+            toast.error('Failed to update address.');
+        }
     });
 
     const deleteAddressMutation = useMutation({
         mutationFn: (id: number) => UserService.deleteAddress(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['addresses'] });
+            toast.success('Address removed.');
         },
+        onError: () => {
+            toast.error('Failed to remove address.');
+        }
     });
 
     return {

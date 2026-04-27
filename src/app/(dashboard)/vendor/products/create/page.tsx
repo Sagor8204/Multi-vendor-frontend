@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import toast from 'react-hot-toast';
 
 export default function CreateProductPage() {
   const [formData, setFormData] = useState({
@@ -22,7 +23,9 @@ export default function CreateProductPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Creating product:', formData);
-    alert('Product Draft Saved! (API integration next)');
+    toast.success('Product Draft Saved! API integration coming soon.', {
+      icon: '💾',
+    });
   };
 
   return (

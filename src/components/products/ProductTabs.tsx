@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ProductService } from '@/services/product.service';
+import toast from 'react-hot-toast';
 
 import { Badge } from '../ui/Badge';
 import Link from 'next/link';
@@ -27,11 +28,13 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
       queryClient.invalidateQueries({ queryKey: ['product-reviews', product.id] });
       queryClient.invalidateQueries({ queryKey: ['product', product.slug] });
       setReviewForm({ rating: 5, comment: '' });
-      alert('Review Submitted Successfully!');
+      toast.success('Review submitted successfully! Thank you for your feedback.', {
+        icon: '✨',
+      });
     },
     onError: (error: any) => {
       const message = error.response?.data?.message || 'Failed to submit review. Please try again.';
-      alert(message);
+      toast.error(message);
     }
   });
 
