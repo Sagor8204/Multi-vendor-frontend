@@ -10,6 +10,7 @@ export const useUser = () => {
     const userInfoQuery = useQuery({
         queryKey: ['user_info'],
         queryFn: UserService.getUserInfo,
+        enabled: typeof window !== 'undefined' && !!localStorage.getItem('access_token'),
     });
 
     const updateUserInfoMutation = useMutation({
@@ -38,6 +39,7 @@ export const useUser = () => {
     const addressesQuery = useQuery({
         queryKey: ['addresses'],
         queryFn: UserService.listAddresses,
+        enabled: typeof window !== 'undefined' && !!localStorage.getItem('access_token'),
     });
 
     const addAddressMutation = useMutation({

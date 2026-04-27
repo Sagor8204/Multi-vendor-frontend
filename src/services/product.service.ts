@@ -29,10 +29,24 @@ export interface ProductImageData {
     order?: number;
 }
 
+export interface ProductSearchParams {
+    q?: string;
+    category?: string; // slug
+    min_price?: number;
+    max_price?: number;
+    sort?: 'price_low' | 'price_high' | 'newest' | 'popular';
+}
+
 export const ProductService = {
     // List all products with optional filters
     async listProducts(params?: ProductListParams): Promise<ApiResponse<Product[]>> {
         const response = await api.get('products/', { params });
+        return response.data;
+    },
+
+    // Advanced search
+    async searchProducts(params?: ProductSearchParams): Promise<ApiResponse<Product[]>> {
+        const response = await api.get('products/search/', { params });
         return response.data;
     },
 

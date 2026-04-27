@@ -8,18 +8,27 @@ import toast from 'react-hot-toast';
 export const useAuth = () => {
     const queryClient = useQueryClient();
     const router = useRouter();
-    const { setUser, logout: logoutStore } = useAuthStore();
+    const { setUser, logout: logoutStore, isAuthenticated: isStoreAuthenticated } = useAuthStore();
 
     const loginMutation = useMutation({
         mutationFn: AuthService.login,
         onSuccess: (response) => {
             if (response.success) {
-                setUser(response.data.user);
+                // Ensure user data exists before setting
+                if (response.data?.user) {
+                    setUser(response.data.user);
+                }
+                
                 queryClient.invalidateQueries({ queryKey: ['user_info'] });
-                toast.success(`Welcome back, ${response.data.user.username}!`, {
+                
+                toast.success(`Welcome back!`, {
                     icon: '👋',
                 });
+                
                 router.push('/');
+            } else {
+                // Handle success: false case from backend
+                toast.error(response.message || 'Login failed. Please check your credentials.');
             }
         },
         onError: (error: any) => {
@@ -34,6 +43,8 @@ export const useAuth = () => {
             if (response.success) {
                 toast.success('Registration successful! Please login to continue.');
                 router.push('/login');
+            } else {
+                toast.error(response.message || 'Registration failed.');
             }
         },
         onError: (error: any) => {
@@ -70,6 +81,9 @@ export const useAuth = () => {
         enabled: typeof window !== 'undefined' && !!localStorage.getItem('access_token'),
     });
 
+    // Prioritize query data but fallback to store data for immediate UI updates
+    const currentUser = userInfoQuery.data?.data || (typeof window !== 'undefined' && localStorage.getItem('access_token') ? useAuthStore.getState().user : null);
+
     return {
         login: loginMutation.mutate,
         isLoggingIn: loginMutation.isPending,
@@ -81,8 +95,8 @@ export const useAuth = () => {
 
         logout: logoutMutation.mutate,
         
-        user: userInfoQuery.data?.data,
-        isAuthenticated: true,
-        isLoadingProfile: userInfoQuery.isLoading,
+        user: currentUser,
+        isAuthenticated: isStoreAuthenticated,
+        isLoadingProfile: userInfoQuery.isLoading && !currentUser,
     };
 };
