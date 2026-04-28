@@ -109,20 +109,20 @@ export default function ProductsPage() {
                 <div className="flex items-center gap-1 p-1 bg-background-subtle rounded-xl border border-border/40">
                    <button 
                      onClick={() => setViewMode('grid')}
-                     className={`p-1.5 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-white text-primary shadow-sm' : 'text-muted hover:text-main'}`}
+                     className={`p-1.5 cursor-pointer rounded-lg transition-all ${viewMode === 'grid' ? 'bg-white text-primary shadow-sm' : 'text-muted hover:text-main'}`}
                    >
                      <LayoutGrid className="w-4 h-4" />
                    </button>
                    <button 
                      onClick={() => setViewMode('list')}
-                     className={`p-1.5 rounded-lg transition-all ${viewMode === 'list' ? 'bg-white text-primary shadow-sm' : 'text-muted hover:text-main'}`}
+                     className={`p-1.5 cursor-pointer rounded-lg transition-all ${viewMode === 'list' ? 'bg-white text-primary shadow-sm' : 'text-muted hover:text-main'}`}
                    >
                      <List className="w-4 h-4" />
                    </button>
                 </div>
                 
                 <div className="relative group">
-                   <button className="flex items-center gap-3 px-4 py-2 hover:bg-background-subtle rounded-xl transition-colors">
+                   <button className="flex cursor-pointer items-center gap-3 px-4 py-2 hover:bg-background-subtle rounded-xl transition-colors">
                       <span className="text-xs font-bold text-muted uppercase tracking-wider">Sort by:</span>
                       <span className="text-xs font-black text-main uppercase tracking-widest flex items-center gap-2">
                          {filters.ordering === 'price' ? 'Lowest Price' : 
@@ -141,7 +141,7 @@ export default function ProductsPage() {
                         <button 
                           key={opt.val}
                           onClick={() => handleSortChange(opt.val as any)}
-                          className="w-full text-left px-6 py-2.5 text-xs font-bold text-muted hover:text-primary hover:bg-primary/5 transition-all"
+                          className="w-full cursor-pointer text-left px-6 py-2.5 text-xs font-bold text-muted hover:text-primary hover:bg-primary/5 transition-all"
                         >
                           {opt.label}
                         </button>

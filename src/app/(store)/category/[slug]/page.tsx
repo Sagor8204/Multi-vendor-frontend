@@ -102,13 +102,13 @@ export default function CategoryDetailPage() {
                    <div className="flex items-center gap-1 p-1 bg-white rounded-xl border border-border/60 shadow-sm">
                       <button 
                         onClick={() => setViewMode('grid')}
-                        className={`p-1.5 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-primary text-white shadow-md' : 'text-muted hover:text-main'}`}
+                        className={`p-1.5 cursor-pointer rounded-lg transition-all ${viewMode === 'grid' ? 'bg-primary text-white shadow-md' : 'text-muted hover:text-main'}`}
                       >
                         <LayoutGrid className="w-4 h-4" />
                       </button>
                       <button 
                         onClick={() => setViewMode('list')}
-                        className={`p-1.5 rounded-lg transition-all ${viewMode === 'list' ? 'bg-primary text-white shadow-md' : 'text-muted hover:text-main'}`}
+                        className={`p-1.5 cursor-pointer rounded-lg transition-all ${viewMode === 'list' ? 'bg-primary text-white shadow-md' : 'text-muted hover:text-main'}`}
                       >
                         <List className="w-4 h-4" />
                       </button>
@@ -116,7 +116,7 @@ export default function CategoryDetailPage() {
 
                    {/* Sorting Dropdown */}
                    <div className="relative group">
-                      <button className="flex items-center gap-3 px-5 py-2.5 bg-white border border-border/60 rounded-xl shadow-sm hover:shadow-md transition-all">
+                      <button className="flex cursor-pointer items-center gap-3 px-5 py-2.5 bg-white border border-border/60 rounded-xl shadow-sm hover:shadow-md transition-all">
                          <span className="text-[10px] font-black text-muted uppercase tracking-widest">Sort:</span>
                          <span className="text-xs font-bold text-main flex items-center gap-2">
                             {ordering === '-created_at' ? 'Newest' : 
@@ -134,7 +134,7 @@ export default function CategoryDetailPage() {
                            <button 
                              key={opt.val}
                              onClick={() => setOrdering(opt.val as any)}
-                             className="w-full text-left px-6 py-2.5 text-xs font-bold text-muted hover:text-primary hover:bg-primary/5 transition-all"
+                             className="w-full cursor-pointer text-left px-6 py-2.5 text-xs font-bold text-muted hover:text-primary hover:bg-primary/5 transition-all"
                            >
                              {opt.label}
                            </button>

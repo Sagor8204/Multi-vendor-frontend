@@ -104,7 +104,7 @@ export default function VendorsPage() {
                             </h3>
                             <div className="flex items-center gap-1 text-warning mt-1">
                                <Star className="w-3.5 h-3.5 fill-warning" />
-                               <span className="text-xs font-black">{vendor.rating || 'N/A'}</span>
+                               <span className="text-xs font-black">{vendor.vendor_rating || 'N/A'}</span>
                             </div>
                          </div>
                          <div className="text-right">

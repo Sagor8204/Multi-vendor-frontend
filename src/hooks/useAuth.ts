@@ -1,14 +1,24 @@
+import { useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { AuthService } from '@/services/auth.service';
 import { UserService } from '@/services/user.service';
 import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { getAccessToken, getTokenExpiryTime, hasValidAccessToken } from '@/lib/auth/token';
+
+let sessionExpiryTimer: number | null = null;
+let scheduledExpiryTime: number | null = null;
+type ApiErrorResponse = {
+    message?: string;
+};
 
 export const useAuth = () => {
     const queryClient = useQueryClient();
     const router = useRouter();
-    const { setUser, logout: logoutStore, isAuthenticated: isStoreAuthenticated } = useAuthStore();
+    const { user: storeUser, setUser, clearAuth } = useAuthStore();
+    const hasAccessToken = hasValidAccessToken();
 
     const loginMutation = useMutation({
         mutationFn: AuthService.login,
@@ -31,7 +41,7 @@ export const useAuth = () => {
                 toast.error(response.message || 'Login failed. Please check your credentials.');
             }
         },
-        onError: (error: any) => {
+        onError: (error: AxiosError<ApiErrorResponse>) => {
             const message = error.response?.data?.message || 'Login failed. Please check your credentials.';
             toast.error(message);
         }
@@ -47,7 +57,7 @@ export const useAuth = () => {
                 toast.error(response.message || 'Registration failed.');
             }
         },
-        onError: (error: any) => {
+        onError: (error: AxiosError<ApiErrorResponse>) => {
             const message = error.response?.data?.message || 'Registration failed. Please try again.';
             toast.error(message);
         }
@@ -56,33 +66,83 @@ export const useAuth = () => {
     const logoutMutation = useMutation({
         mutationFn: AuthService.logout,
         onSuccess: () => {
-            logoutStore();
+            clearAuth();
             queryClient.clear();
             toast.success('Logged out successfully');
             router.push('/login');
         },
         onError: () => {
             // Even if API logout fails, we clear local state
-            logoutStore();
+            clearAuth();
             queryClient.clear();
             router.push('/login');
         }
     });
 
+    useEffect(() => {
+        const accessToken = getAccessToken();
+
+        if (!accessToken) {
+            if (storeUser) {
+                clearAuth();
+            }
+            if (sessionExpiryTimer) {
+                window.clearTimeout(sessionExpiryTimer);
+                sessionExpiryTimer = null;
+            }
+            scheduledExpiryTime = null;
+            return;
+        }
+
+        const expiryTime = getTokenExpiryTime(accessToken);
+
+        if (!expiryTime || expiryTime <= Date.now()) {
+            clearAuth();
+            queryClient.clear();
+            scheduledExpiryTime = null;
+            toast.error('Session expired. Please sign in again.');
+            return;
+        }
+
+        if (sessionExpiryTimer && scheduledExpiryTime === expiryTime) {
+            return;
+        }
+
+        if (sessionExpiryTimer) {
+            window.clearTimeout(sessionExpiryTimer);
+        }
+
+        scheduledExpiryTime = expiryTime;
+        sessionExpiryTimer = window.setTimeout(() => {
+            clearAuth();
+            queryClient.clear();
+            toast.error('Session expired. Please sign in again.');
+            sessionExpiryTimer = null;
+            scheduledExpiryTime = null;
+        }, expiryTime - Date.now());
+    }, [clearAuth, queryClient, storeUser]);
+
     const userInfoQuery = useQuery({
         queryKey: ['user_info'],
         queryFn: UserService.getUserInfo,
-        enabled: typeof window !== 'undefined' && !!localStorage.getItem('access_token')
-    })
-
-    const profileQuery = useQuery({
-        queryKey: ['profile'],
-        queryFn: UserService.getMyProfile,
-        enabled: typeof window !== 'undefined' && !!localStorage.getItem('access_token'),
+        enabled: hasAccessToken,
     });
 
-    // Prioritize query data but fallback to store data for immediate UI updates
-    const currentUser = userInfoQuery.data?.data || (typeof window !== 'undefined' && localStorage.getItem('access_token') ? useAuthStore.getState().user : null);
+    useEffect(() => {
+        if (userInfoQuery.data?.success && userInfoQuery.data.data) {
+            setUser(userInfoQuery.data.data);
+        }
+    }, [setUser, userInfoQuery.data]);
+
+    useEffect(() => {
+        const status = (userInfoQuery.error as AxiosError | null)?.response?.status;
+
+        if (status === 401) {
+            clearAuth();
+        }
+    }, [clearAuth, userInfoQuery.error]);
+
+    const currentUser = hasAccessToken ? userInfoQuery.data?.data || storeUser : null;
 
     return {
         login: loginMutation.mutate,
@@ -96,7 +156,7 @@ export const useAuth = () => {
         logout: logoutMutation.mutate,
         
         user: currentUser,
-        isAuthenticated: isStoreAuthenticated,
+        isAuthenticated: hasAccessToken && !!currentUser,
         isLoadingProfile: userInfoQuery.isLoading && !currentUser,
     };
 };

@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { useAuthStore } from '@/store/authStore';
+import { getAccessToken, isTokenExpired } from '@/lib/auth/token';
 
 const baseURL = 'http://localhost:8000/api/v1/';
 
@@ -12,48 +14,34 @@ const api = axios.create({
 // Request interceptor to add auth token
 api.interceptors.request.use(
     (config) => {
-        const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+        const token = getAccessToken();
+
         if (token) {
+            if (isTokenExpired(token)) {
+                useAuthStore.getState().clearAuth();
+                return Promise.reject(new axios.Cancel('Access token expired.'));
+            }
+
             config.headers.Authorization = `Bearer ${token}`;
         }
+
         return config;
     },
     (error) => Promise.reject(error)
 );
 
-// Response interceptor to handle token refresh
+// Response interceptor to clear auth state on unauthorized responses
 api.interceptors.response.use(
     (response) => response,
-    async (error) => {
+    (error) => {
         const originalRequest = error.config;
 
         // Skip refresh logic for login and register endpoints
         const isAuthRequest = originalRequest.url?.includes('auth/login') || 
                              originalRequest.url?.includes('auth/register');
 
-        if (error.response?.status === 401 && !originalRequest._retry && !isAuthRequest) {
-            originalRequest._retry = true;
-
-            try {
-                const refreshToken = localStorage.getItem('refresh_token');
-                const response = await axios.post(`${baseURL}auth/refresh`, {
-                    refresh: refreshToken,
-                });
-
-                const { access } = response.data.data;
-                localStorage.setItem('access_token', access);
-
-                originalRequest.headers.Authorization = `Bearer ${access}`;
-                return api(originalRequest);
-            } catch (refreshError) {
-                // If refresh fails, clear tokens and redirect to login
-                localStorage.removeItem('access_token');
-                localStorage.removeItem('refresh_token');
-                if (typeof window !== 'undefined') {
-                    window.location.href = '/login';
-                }
-                return Promise.reject(refreshError);
-            }
+        if (error.response?.status === 401 && !isAuthRequest) {
+            useAuthStore.getState().clearAuth();
         }
 
         return Promise.reject(error);

@@ -2,15 +2,17 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { UserService } from '@/services/user.service';
 import { Address } from '@/types/api/auth';
 import toast from 'react-hot-toast';
+import { hasValidAccessToken } from '@/lib/auth/token';
 
 export const useUser = () => {
     const queryClient = useQueryClient();
+    const canRequest = hasValidAccessToken();
 
     // --- User Info ---
     const userInfoQuery = useQuery({
         queryKey: ['user_info'],
         queryFn: UserService.getUserInfo,
-        enabled: typeof window !== 'undefined' && !!localStorage.getItem('access_token'),
+        enabled: canRequest,
     });
 
     const updateUserInfoMutation = useMutation({
@@ -39,7 +41,7 @@ export const useUser = () => {
     const addressesQuery = useQuery({
         queryKey: ['addresses'],
         queryFn: UserService.listAddresses,
-        enabled: typeof window !== 'undefined' && !!localStorage.getItem('access_token'),
+        enabled: canRequest,
     });
 
     const addAddressMutation = useMutation({

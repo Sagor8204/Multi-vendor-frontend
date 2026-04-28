@@ -256,7 +256,7 @@ export const Header = () => {
                     <div className="py-2">
                       <p className="px-6 py-2 text-[10px] font-black text-muted uppercase tracking-[0.2em]">Products Found</p>
                       <div className="grid grid-cols-1 gap-1">
-                        {searchResults.data.slice(0, 6).map((product) => (
+                        {searchResults.data.map((product) => (
                           <Link
                             key={product.id}
                             href={`/products/${product.slug}`}
@@ -282,17 +282,6 @@ export const Header = () => {
                           </Link>
                         ))}
                       </div>
-                      
-                      {searchResults.data.length > 6 && (
-                        <div className="p-4 border-t border-border/40 mt-2">
-                          <button 
-                            onClick={handleSearch}
-                            className="w-full py-3 bg-background-subtle hover:bg-primary hover:text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all text-main"
-                          >
-                            View All {searchResults.data.length} Results
-                          </button>
-                        </div>
-                      )}
                     </div>
                   ) : (
                     <div className="py-12 text-center">

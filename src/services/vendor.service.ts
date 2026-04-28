@@ -8,9 +8,10 @@ export interface Vendor {
     store_logo: string | null;
     owner: number;
     is_verified: boolean;
-    rating?: number;
+    vendor_rating?: number;
     product_count?: number;
     created_at?: string;
+    total_reviews?: number;
 }
 
 export const VendorService = {
