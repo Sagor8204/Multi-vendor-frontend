@@ -25,10 +25,13 @@ export interface Product {
     price: number;
     stock: number;
     category: Category;
+    total_review?: number;
     vendor: {
         id: number;
         store_name: string;
         store_logo?: string;
+        average_rating?: number;
+        vendor_rating?: number;
     };
     images: ProductImage[];
     average_rating?: number;

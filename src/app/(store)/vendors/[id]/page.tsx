@@ -113,7 +113,7 @@ export default function VendorStorePage() {
                 <div className="flex items-center gap-1.5 text-warning">
                   <Star className="w-4 h-4 fill-warning" />
                   <span className="text-main font-black">
-                    {vendor.rating || "New"}
+                    {vendor.vendor_rating || "New"}
                   </span>
                   <span className="text-[10px] uppercase opacity-60">
                     (Reviews coming soon)

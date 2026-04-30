@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { useCartStore } from '@/store/cartStore';
 import { useWishlistStore } from '@/store/wishlistStore';
@@ -32,7 +32,6 @@ export const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const mounted = useIsMounted();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isDepsOpen, setIsDepsOpen] = useState(false);

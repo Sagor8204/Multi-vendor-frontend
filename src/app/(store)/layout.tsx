@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 
@@ -11,7 +11,9 @@ export default function StoreLayout({
 }) {
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <Suspense fallback={<div className="h-20 bg-white border-b border-border" />}>
+        <Header />
+      </Suspense>
       <main className="flex-grow bg-white">
         {children}
       </main>

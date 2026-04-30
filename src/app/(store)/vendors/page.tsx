@@ -53,7 +53,7 @@ export default function VendorsPage() {
            ].map((stat, i) => (
              <div key={i} className="bg-white p-6 rounded-3xl border border-border/40 shadow-sm flex items-center gap-4">
                 <div className="w-10 h-10 bg-background-subtle rounded-xl flex items-center justify-center text-muted">
-                   {React.cloneElement(stat.icon as React.ReactElement, { className: 'w-5 h-5' })}
+                   {React.cloneElement(stat.icon as React.ReactElement<{ className?: string}>, { className: 'w-5 h-5' })}
                 </div>
                 <div>
                    <div className="text-lg font-black text-main leading-none">{stat.value}</div>

@@ -34,7 +34,7 @@ export const TrustFeatures = () => {
           {FEATURES.map((f, i) => (
             <div key={i} className="flex flex-col md:flex-row gap-4 items-center md:items-start text-center md:text-left group cursor-default">
               <div className="shrink-0 w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:shadow-md transition-all duration-300">
-                {React.cloneElement(f.icon as React.ReactElement, { className: 'w-6 h-6' })}
+                {React.cloneElement(f.icon as React.ReactElement<{ className?: string}>, { className: 'w-6 h-6' })}
               </div>
               <div>
                 <h3 className="text-xs font-black text-main uppercase tracking-widest mb-1">{f.title}</h3>
