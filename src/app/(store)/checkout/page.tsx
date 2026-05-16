@@ -97,12 +97,12 @@ export default function CheckoutPage() {
               <Card className="bg-text-main text-white border-none shadow-2xl">
                  <h2 className="text-xl font-bold mb-6 text-secondary tracking-tight">Review Order</h2>
                  
-                 <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                 <div className="space-y-4 max-h-75 overflow-y-auto pr-2 custom-scrollbar">
                     {cart.map((item) => (
                        <div key={item.id} className="flex justify-between items-center gap-4">
                           <div className="flex items-center gap-3">
-                             <div className="w-10 h-10 bg-white/10 rounded overflow-hidden flex-shrink-0">
-                                <img src={item.image} className="w-full h-full object-cover" />
+                             <div className="w-10 h-10 bg-white/10 rounded overflow-hidden shrink-0">
+                                <img src={item.image || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop"} className="w-full h-full object-cover" />
                              </div>
                              <div>
                                 <div className="text-xs font-bold line-clamp-1">{item.name}</div>
@@ -114,19 +114,19 @@ export default function CheckoutPage() {
                     ))}
                  </div>
                  
-                 <div className="h-[1px] bg-white/10 my-6"></div>
+                 <div className="h-px bg-white/10 my-6"></div>
                  
                  <div className="space-y-3">
-                    <div className="flex justify-between text-xs font-bold text-white/60 uppercase tracking-widest">
+                    <div className="flex justify-between text-xs font-bold text-muted uppercase tracking-widest">
                        <span>Subtotal</span>
                        <span>${cartTotal.toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between text-xs font-bold text-white/60 uppercase tracking-widest">
+                    <div className="flex justify-between text-xs font-bold text-muted uppercase tracking-widest">
                        <span>Shipping</span>
                        <span className="text-secondary">FREE</span>
                     </div>
                     <div className="flex justify-between items-center pt-4">
-                       <span className="text-lg font-extrabold uppercase tracking-tight">Order Total</span>
+                       <span className="text-lg font-extrabold uppercase text-muted tracking-tight">Order Total</span>
                        <span className="text-3xl font-extrabold text-secondary tracking-tighter">${cartTotal.toFixed(2)}</span>
                     </div>
                  </div>

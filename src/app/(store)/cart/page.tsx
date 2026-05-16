@@ -45,11 +45,11 @@ export default function CartPage() {
         <div className="lg:col-span-2 space-y-6">
           {cart.map((item) => (
             <div key={item.id} className="flex flex-col sm:flex-row items-center bg-white border border-border p-6 rounded-2xl gap-6 hover:shadow-sm transition-shadow">
-               <div className="w-24 h-24 bg-background-subtle rounded-xl overflow-hidden flex-shrink-0">
-                  <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+               <div className="w-24 h-24 bg-background-subtle rounded-xl overflow-hidden shrink-0">
+                  <img src={item.image || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop"} alt={item.name} className="w-full h-full object-cover" />
                </div>
                
-               <div className="flex-grow text-center sm:text-left">
+               <div className="grow text-center sm:text-left">
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
                      <div>
                         <h3 className="font-bold text-lg text-main leading-tight">{item.name}</h3>
@@ -66,7 +66,7 @@ export default function CartPage() {
                         >
                            <Minus className="w-3 h-3" />
                         </button>
-                        <span className="px-4 py-1 font-bold text-sm min-w-[40px] text-center border-x border-border">{item.quantity}</span>
+                        <span className="px-4 py-1 font-bold text-sm min-w-10 text-center border-x border-border">{item.quantity}</span>
                         <button 
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
                           className="px-3 py-1 cursor-pointer hover:bg-white transition-colors"
@@ -106,7 +106,7 @@ export default function CartPage() {
                     <span className="text-main">$0.00</span>
                  </div>
                  
-                 <div className="h-[1px] bg-border my-6"></div>
+                 <div className="h-px bg-border my-6"></div>
                  
                  <div className="flex justify-between items-center mb-8">
                     <span className="text-lg font-extrabold text-main">Total Amount</span>
