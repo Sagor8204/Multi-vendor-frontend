@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { ProductCard } from '@/components/products/ProductCard';
 import { ProductService, ProductListParams } from '@/services/product.service';
 import { CategoryService } from '@/services/category.service';
@@ -10,12 +11,78 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 
 export default function ProductsPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [filters, setFilters] = useState<ProductListParams>({
-    ordering: '-created_at'
+  
+  // Initialize filters from search params
+  const [filters, setFilters] = useState<ProductListParams>(() => {
+    const params: ProductListParams = {
+      ordering: (searchParams.get('ordering') as any) || '-created_at'
+    };
+    
+    if (searchParams.get('trending') === 'true') {
+      params.trending = true;
+    }
+    
+    if (searchParams.get('on_sale') === 'true') {
+      params.on_sale = true;
+    }
+
+    const categorySlug = searchParams.get('category');
+    if (categorySlug) {
+      params.category_slug = categorySlug;
+    }
+    
+    return params;
   });
+
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedParents, setExpandedParents] = useState<number[]>([]);
+
+  // Sync URL with filters
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (filters.trending) params.set('trending', 'true');
+    if (filters.on_sale) params.set('on_sale', 'true');
+    if (filters.category_slug) params.set('category', filters.category_slug);
+    if (filters.ordering && filters.ordering !== '-created_at') {
+      params.set('ordering', filters.ordering);
+    }
+    
+    const queryString = params.toString();
+    const newUrl = queryString ? `/products?${queryString}` : '/products';
+    
+    const currentUrl = window.location.pathname + window.location.search;
+    if (currentUrl !== newUrl) {
+      router.push(newUrl, { scroll: false });
+    }
+  }, [filters, router]);
+
+  // Update filters if searchParams change externally
+  useEffect(() => {
+    const newTrending = searchParams.get('trending') === 'true' || undefined;
+    const newOnSale = searchParams.get('on_sale') === 'true' || undefined;
+    const newCategorySlug = searchParams.get('category') || undefined;
+    const newOrdering = (searchParams.get('ordering') as any) || '-created_at';
+
+    setFilters(prev => {
+      if (prev.trending === newTrending && 
+          prev.on_sale === newOnSale && 
+          prev.category_slug === newCategorySlug &&
+          prev.ordering === newOrdering) {
+        return prev;
+      }
+
+      return {
+        ...prev,
+        trending: newTrending,
+        on_sale: newOnSale,
+        category_slug: newCategorySlug,
+        ordering: newOrdering
+      };
+    });
+  }, [searchParams]);
 
   const { data: categoriesRes } = useQuery({
     queryKey: ['categories'],
@@ -51,10 +118,10 @@ export default function ProductsPage() {
     );
   };
 
-  const handleCategoryToggle = (categoryId?: number) => {
+  const handleCategoryToggle = (categorySlug?: string) => {
     setFilters(prev => ({
       ...prev,
-      category: prev.category === categoryId ? undefined : categoryId
+      category_slug: prev.category_slug === categorySlug ? undefined : categorySlug
     }));
   };
 
@@ -62,7 +129,11 @@ export default function ProductsPage() {
     setFilters(prev => ({ ...prev, ordering }));
   };
 
-  const activeCategoryName = categories.find(c => c.id === filters.category)?.name || 'All Products';
+  const activeCategoryName = useMemo(() => {
+    if (filters.trending) return 'Trending Products';
+    if (filters.on_sale) return 'Flash Sales';
+    return categories.find(c => c.slug === filters.category_slug)?.name || 'All Products';
+  }, [filters, categories]);
 
   return (
     <div className="bg-background-subtle/30 min-h-screen">
@@ -75,11 +146,11 @@ export default function ProductsPage() {
                 <p className="text-sm font-semibold text-muted mt-2">{products.length} items found</p>
              </div>
              
-             <div className="relative w-full md:w-[450px]">
+             <div className="relative w-full md:w-112.5">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
                 <input 
                   type="text" 
-                  placeholder="Search in this category..." 
+                  placeholder="Search products..." 
                   className="w-full h-12 pl-11 pr-4 bg-white border border-border/50 shadow-sm focus:border-primary focus:ring-4 focus:ring-primary/5 rounded-2xl text-sm font-medium transition-all outline-none"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -94,10 +165,35 @@ export default function ProductsPage() {
                    Filters
                 </button>
                 <div className="hidden md:flex items-center gap-2">
-                   {filters.category && (
+                   {filters.trending && (
                      <Badge variant="primary" className="pl-3 pr-1 py-1 gap-1 normal-case font-bold">
-                        {activeCategoryName}
-                        <button onClick={() => handleCategoryToggle(undefined)} className="p-0.5 hover:bg-primary/20 rounded-full transition-colors">
+                        Trending
+                        <button 
+                          onClick={() => setFilters(prev => ({ ...prev, trending: undefined }))} 
+                          className="p-0.5 cursor-pointer hover:bg-primary/20 rounded-full transition-colors"
+                        >
+                           <X className="w-3 h-3" />
+                        </button>
+                     </Badge>
+                   )}
+                   {filters.on_sale && (
+                     <Badge variant="primary" className="pl-3 pr-1 py-1 gap-1 normal-case font-bold">
+                        Flash Sales
+                        <button 
+                          onClick={() => setFilters(prev => ({ ...prev, on_sale: undefined }))} 
+                          className="p-0.5 cursor-pointer hover:bg-primary/20 rounded-full transition-colors"
+                        >
+                           <X className="w-3 h-3" />
+                        </button>
+                     </Badge>
+                   )}
+                   {filters.category_slug && (
+                     <Badge variant="primary" className="pl-3 pr-1 py-1 gap-1 normal-case font-bold">
+                        {categories.find(c => c.slug === filters.category_slug)?.name || 'Category'}
+                        <button 
+                          onClick={() => setFilters(prev => ({ ...prev, category_slug: undefined }))} 
+                          className="p-0.5 cursor-pointer hover:bg-primary/20 rounded-full transition-colors"
+                        >
                            <X className="w-3 h-3" />
                         </button>
                      </Badge>
@@ -160,25 +256,25 @@ export default function ProductsPage() {
              <div>
                 <h3 className="text-[10px] font-black text-main uppercase tracking-[0.2em] mb-6 flex items-center justify-between">
                   Departments
-                  {filters.category && <button onClick={() => handleCategoryToggle(undefined)} className="text-primary hover:underline lowercase tracking-normal font-bold">Clear</button>}
+                  {filters.category_slug && <button onClick={() => handleCategoryToggle(undefined)} className="text-primary hover:underline lowercase tracking-normal font-bold cursor-pointer">Clear</button>}
                 </h3>
                 <div className="space-y-2">
                    {categoryTree.map(parent => {
                      const isExpanded = expandedParents.includes(parent.id);
-                     const isParentSelected = filters.category === parent.id;
+                     const isParentSelected = filters.category_slug === parent.slug;
 
                      return (
                        <div key={parent.id} className="space-y-1">
                           <div className="flex items-center group">
                             <button 
-                              onClick={() => handleCategoryToggle(parent.id)}
-                              className={`flex-grow flex items-center justify-between px-4 py-2.5 rounded-xl transition-all ${
+                              onClick={() => handleCategoryToggle(parent.slug)}
+                              className={`grow flex items-center justify-between px-4 py-2.5 rounded-xl transition-all ${
                                 isParentSelected 
                                   ? 'bg-primary text-white shadow-md font-bold' 
                                   : 'text-muted font-semibold hover:bg-white hover:text-main'
                               }`}
                             >
-                               <span className="text-sm">{parent.name}</span>
+                               <span className="text-sm cursor-pointer">{parent.name}</span>
                                <span className={`text-[10px] ${isParentSelected ? 'text-white/60' : 'text-muted/40'}`}>
                                   {parent.product_count}
                                </span>
@@ -196,11 +292,11 @@ export default function ProductsPage() {
                           {isExpanded && parent.subcategories.length > 0 && (
                             <div className="ml-6 space-y-1 pl-4 border-l border-border/60 mt-1 animate-in slide-in-from-top-2 duration-300">
                                {parent.subcategories.map(sub => {
-                                 const isSubSelected = filters.category === sub.id;
+                                 const isSubSelected = filters.category_slug === sub.slug;
                                  return (
                                    <button 
                                      key={sub.id} 
-                                     onClick={() => handleCategoryToggle(sub.id)}
+                                     onClick={() => handleCategoryToggle(sub.slug)}
                                      className={`w-full flex items-center justify-between px-4 py-2 rounded-lg text-xs transition-all cursor-pointer ${
                                        isSubSelected 
                                          ? 'text-primary font-bold bg-primary/5' 
@@ -229,11 +325,11 @@ export default function ProductsPage() {
                       <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-4 h-4 bg-white border-2 border-primary rounded-full shadow-sm cursor-pointer"></div>
                    </div>
                    <div className="flex items-center justify-between gap-4">
-                      <div className="flex-grow">
+                      <div className="grow">
                          <label className="text-[8px] font-black text-muted uppercase tracking-widest block mb-1">Min Price</label>
                          <div className="text-sm font-bold text-main">$0</div>
                       </div>
-                      <div className="flex-grow text-right">
+                      <div className="grow text-right">
                          <label className="text-[8px] font-black text-muted uppercase tracking-widest block mb-1">Max Price</label>
                          <div className="text-sm font-bold text-main">$750</div>
                       </div>
@@ -256,7 +352,7 @@ export default function ProductsPage() {
             {productsLoading ? (
               <div className={`grid gap-6 md:gap-8 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
                 {[1, 2, 3, 4, 5, 6].map(i => (
-                  <div key={i} className={`bg-white animate-pulse rounded-2xl border border-border/40 ${viewMode === 'grid' ? 'aspect-[4/5]' : 'h-48'}`} />
+                  <div key={i} className={`bg-white animate-pulse rounded-2xl border border-border/40 ${viewMode === 'grid' ? 'aspect-4/5' : 'h-48'}`} />
                 ))}
               </div>
             ) : products.length > 0 ? (
@@ -287,7 +383,7 @@ export default function ProductsPage() {
                   <Button 
                     variant="outline" 
                     className="mt-8 border-2"
-                    onClick={() => {setSearchTerm(''); setFilters({ordering: '-created_at'})}}
+                    onClick={() => {setSearchTerm(''); setFilters({ordering: '-created_at', trending: undefined, on_sale: undefined, category_slug: undefined})}}
                   >
                     Clear all filters
                   </Button>

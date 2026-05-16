@@ -77,7 +77,7 @@ export default function CategoriesListingPage() {
         ) : nestedCategories.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {nestedCategories.map((parent) => (
-              <Card key={parent.id} noPadding className="group bg-white rounded-[2.5rem] border-transparent hover:border-primary/20 hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] transition-all duration-500 overflow-hidden flex flex-col h-full">
+              <Card key={parent.id} noPadding className="group bg-white rounded-[2.5rem]hover:border-primary/20 hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] transition-all duration-500 overflow-hidden flex flex-col h-full">
                 {/* Card Header: Parent Info */}
                 <div className="p-10 pb-6">
                   <div className="flex justify-between items-start mb-6">
@@ -127,7 +127,7 @@ export default function CategoriesListingPage() {
                 {/* Card Footer: CTA */}
                 <div className="p-10 pt-4">
                   <Link href={`/category/${parent.slug}`}>
-                    <Button variant="outline" className="w-full h-12 text-[10px] font-black uppercase tracking-[0.2em] border-2 group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all">
+                    <Button variant="outline" className="w-full h-12 text-[10px] font-black uppercase tracking-[0.2em] border-2 group-hover:bg-primary group-hover:text-white group-hover:border-primary hover:text-primary transition-all">
                       Browse Department
                     </Button>
                   </Link>

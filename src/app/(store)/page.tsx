@@ -60,6 +60,7 @@ export default function StoreHome() {
             products={trendingProducts} 
             title="Trending Now"
             subtitle="The most popular items from our community this week."
+            viewAllHref="/products?trending=true"
           />
         )}
       </section>
@@ -79,6 +80,7 @@ export default function StoreHome() {
               products={saleProducts} 
               title="Flash Sales"
               subtitle="Limited time offers from our verified partners."
+              viewAllHref="/products?on_sale=true"
             />
           </div>
         )}
