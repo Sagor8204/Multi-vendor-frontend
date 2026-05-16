@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, Suspense } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { ProductCard } from '@/components/products/ProductCard';
@@ -10,7 +10,7 @@ import { Search, SlidersHorizontal, ChevronDown, LayoutGrid, List, X } from 'luc
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 
-export default function ProductsPage() {
+function ProductsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -352,7 +352,7 @@ export default function ProductsPage() {
             {productsLoading ? (
               <div className={`grid gap-6 md:gap-8 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
                 {[1, 2, 3, 4, 5, 6].map(i => (
-                  <div key={i} className={`bg-white animate-pulse rounded-2xl border border-border/40 ${viewMode === 'grid' ? 'aspect-4/5' : 'h-48'}`} />
+                  <div key={i} className={`bg-white animate-pulse rounded-2xl border border-border/40 ${viewMode === 'grid' ? 'aspect-[4/5]' : 'h-48'}`} />
                 ))}
               </div>
             ) : products.length > 0 ? (
@@ -393,5 +393,17 @@ export default function ProductsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background-subtle/30 flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    }>
+      <ProductsContent />
+    </Suspense>
   );
 }
