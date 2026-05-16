@@ -67,7 +67,7 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({ product, slug }) => {
                  {product.vendor.name}
               </span>
            </Link>
-           <button className="p-2 hover:bg-background-subtle rounded-full transition-colors">
+           <button className="p-2 cursor-pointer hover:bg-background-subtle rounded-full transition-colors">
               <Share2 className="w-4 h-4 text-muted" />
            </button>
         </div>
@@ -126,7 +126,7 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({ product, slug }) => {
                <div className="flex gap-3 pt-2">
                   <Button 
                     onClick={handleAddToCart}
-                    className="flex-grow py-4 text-sm font-bold uppercase tracking-widest"
+                    className="grow py-4 text-sm font-bold uppercase tracking-widest"
                   >
                     Add to Cart
                   </Button>

@@ -59,7 +59,7 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`pb-4 text-[11px] font-black uppercase tracking-[0.2em] transition-all relative whitespace-nowrap ${
+                className={`pb-4 text-[11px] cursor-pointer font-black uppercase tracking-[0.2em] transition-all relative whitespace-nowrap ${
                   activeTab === tab ? 'text-primary' : 'text-muted hover:text-main'
                 }`}
               >
@@ -71,7 +71,7 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
             ))}
           </div>
 
-          <div className="min-h-[300px]">
+          <div className="min-h-75">
             {activeTab === 'description' && (
               <div className="space-y-8 animate-in fade-in duration-500">
                  <p className="text-base text-muted leading-relaxed font-medium max-w-2xl">
@@ -108,7 +108,7 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
                             <div className="w-12 h-12 rounded-full bg-background-subtle flex items-center justify-center text-xs font-bold shrink-0">
                                 {review.user?.substring(0, 2).toUpperCase() || "A"}
                             </div>
-                            <div className="flex-grow space-y-2">
+                            <div className="grow space-y-2">
                                 <div className="flex justify-between items-center">
                                     <h4 className="font-bold text-main text-sm">{review.user}</h4>
                                     <span className="text-[10px] font-bold text-muted uppercase tracking-widest">{review.date}</span>
@@ -142,7 +142,7 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
                                                 key={star}
                                                 type="button"
                                                 onClick={() => setReviewForm({...reviewForm, rating: star})}
-                                                className={`p-2 rounded-lg border transition-all ${reviewForm.rating >= star ? 'bg-warning/10 border-warning text-warning' : 'border-border text-muted hover:border-warning/50'}`}
+                                                className={`p-2 rounded-lg border cursor-pointer transition-all ${reviewForm.rating >= star ? 'bg-warning/10 border-warning text-warning' : 'border-border text-muted hover:border-warning/50'}`}
                                             >
                                                 <Star className={`w-4 h-4 ${reviewForm.rating >= star ? 'fill-warning' : ''}`} />
                                             </button>

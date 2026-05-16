@@ -31,7 +31,7 @@ export default function ProductDetailsPage() {
     return (
       <div className="max-w-7xl mx-auto px-6 py-24 animate-pulse">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-          <div className="lg:col-span-7 aspect-[4/3] bg-background-subtle rounded-3xl" />
+          <div className="lg:col-span-7 aspect-4/3 bg-background-subtle rounded-3xl" />
           <div className="lg:col-span-5 space-y-8">
             <div className="h-12 bg-background-subtle rounded-xl w-3/4" />
             <div className="h-8 bg-background-subtle rounded-xl w-1/4" />
