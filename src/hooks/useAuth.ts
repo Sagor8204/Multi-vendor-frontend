@@ -4,7 +4,7 @@ import { AxiosError } from 'axios';
 import { AuthService } from '@/services/auth.service';
 import { UserService } from '@/services/user.service';
 import { useAuthStore } from '@/store/authStore';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { getAccessToken, getTokenExpiryTime, hasValidAccessToken } from '@/lib/auth/token';
 
@@ -17,6 +17,7 @@ type ApiErrorResponse = {
 export const useAuth = () => {
     const queryClient = useQueryClient();
     const router = useRouter();
+    const searchParams = useSearchParams();
     const { user: storeUser, setUser, clearAuth } = useAuthStore();
     const hasAccessToken = hasValidAccessToken();
 
@@ -35,7 +36,8 @@ export const useAuth = () => {
                     icon: '👋',
                 });
                 
-                router.push('/');
+                const redirectTo = searchParams.get('redirect') || '/';
+                router.push(redirectTo);
             } else {
                 // Handle success: false case from backend
                 toast.error(response.message || 'Login failed. Please check your credentials.');

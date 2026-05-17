@@ -1,6 +1,7 @@
 import api from '@/lib/api/axios';
 import { ApiResponse } from '@/types/api/common';
 import { AuthResponse } from '@/types/api/auth';
+import { setTokens, clearStoredTokens, getRefreshToken } from '@/lib/auth/token';
 
 export const AuthService = {
     async register(data: any): Promise<ApiResponse<AuthResponse>> {
@@ -11,17 +12,15 @@ export const AuthService = {
     async login(data: any): Promise<ApiResponse<AuthResponse>> {
         const response = await api.post('auth/login', data);
         if (response.data.success) {
-            localStorage.setItem('access_token', response.data.data.access);
-            localStorage.setItem('refresh_token', response.data.data.refresh);
+            setTokens(response.data.data.access, response.data.data.refresh);
         }
         return response.data;
     },
 
     async logout(): Promise<ApiResponse<null>> {
-        const refresh = localStorage.getItem('refresh_token');
+        const refresh = getRefreshToken();
         const response = await api.post('auth/logout', { refresh });
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
+        clearStoredTokens();
         return response.data;
     },
 
