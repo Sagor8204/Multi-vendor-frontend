@@ -18,6 +18,7 @@ import {
 import { CategoryService } from '@/services/category.service';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { CategoryPageSkeleton } from '@/components/ui/Skeleton';
 
 const getIconForCategory = (slug: string) => {
   const icons: Record<string, React.ReactNode> = {
@@ -69,9 +70,9 @@ export default function CategoriesListingPage() {
 
       <div className="max-w-7xl mx-auto px-6">
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="h-80 rounded-[2.5rem] bg-white animate-pulse border border-border/40" />
+              <CategoryPageSkeleton key={i} />
             ))}
           </div>
         ) : nestedCategories.length > 0 ? (

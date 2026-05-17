@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
@@ -10,8 +10,8 @@ import { CategorySidebar } from '@/components/categories/CategorySidebar';
 import { Button } from '@/components/ui/Button';
 import { ProductService, ProductListParams } from '@/services/product.service';
 import { CategoryService } from '@/services/category.service';
-import { LayoutGrid, List, ChevronDown, Search, ArrowLeft } from 'lucide-react';
-import { Badge } from '@/components/ui/Badge';
+import { LayoutGrid, List, ChevronDown, Search } from 'lucide-react';
+import { ProductSkeleton } from '@/components/products/ProductSkeleton';
 
 export default function CategoryDetailPage() {
   const { slug } = useParams();
@@ -147,9 +147,7 @@ export default function CategoryDetailPage() {
              {/* Product Loop */}
              {productsLoading ? (
                <div className={`grid gap-8 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3' : 'grid-cols-1'}`}>
-                  {[1, 2, 3, 4, 5, 6].map(i => (
-                    <div key={i} className={`bg-white animate-pulse rounded-3xl border border-border/40 ${viewMode === 'grid' ? 'aspect-[4/5]' : 'h-48'}`} />
-                  ))}
+                  {[1, 2, 3, 4, 5, 6].map(i => <ProductSkeleton key={i} />)}
                </div>
              ) : products.length > 0 ? (
                <div className={`grid gap-6 md:gap-8 ${viewMode === 'grid' ? 'grid-cols-2 md:grid-cols-2 xl:grid-cols-3' : 'grid-cols-1'}`}>

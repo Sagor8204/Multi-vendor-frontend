@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/hooks/useAuth';
 import { User, Store, ArrowRight } from 'lucide-react';
 
-export default function RegisterPage() {
+function RegisterContent() {
   const { register, isRegistering } = useAuth();
   const [role, setRole] = useState<'customer' | 'vendor'>('customer');
   const [formData, setFormData] = useState({
@@ -153,4 +153,16 @@ export default function RegisterPage() {
       </div>
     </div>
   );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background-subtle/30 flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    }>
+      <RegisterContent />
+    </Suspense>
+  ) 
 }

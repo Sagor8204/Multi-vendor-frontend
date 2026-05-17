@@ -17,6 +17,7 @@ export function middleware(request: NextRequest) {
 
   // Get tokens from cookies
   const accessToken = cookies.get('access_token')?.value;
+  const hasValidToken = !!accessToken && accessToken !== '';
 
   // Check route types
   const isPublicRoute = publicRoutes.includes(path) || 
@@ -27,24 +28,23 @@ export function middleware(request: NextRequest) {
   // Redirect Logic:
 
   // A. If accessing auth routes while logged in -> Redirect to home
-  if (isAuthRoute && accessToken) {
+  if (isAuthRoute && hasValidToken) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
   // B. If accessing private/vendor routes while logged out -> Redirect to login
   const isPrivateRoute = !isPublicRoute && !isAuthRoute;
-  if (isPrivateRoute && !accessToken) {
+  if (isPrivateRoute && !hasValidToken) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('redirect', path);
     return NextResponse.redirect(loginUrl);
   }
 
   // C. Role-Based Access Control (RBAC) for Vendor Dashboard
-  if (isVendorRoute && accessToken) {
+  if (isVendorRoute && hasValidToken) {
     try {
       // Basic JWT decoding in middleware (Edge Runtime compatible)
       const payload = JSON.parse(atob(accessToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
-      
       if (payload.role !== 'vendor') {
         // Not a vendor? Send them to profile or show 403
         return NextResponse.redirect(new URL('/profile', request.url));

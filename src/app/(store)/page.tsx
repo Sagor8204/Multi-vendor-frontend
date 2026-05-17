@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { HomeHero } from '@/components/home/HomeHero';
 import { HomeCategories } from '@/components/home/HomeCategories';
 import { FeaturedProducts } from '@/components/home/FeaturedProducts';
+import { ProductSkeleton } from '@/components/products/ProductSkeleton';
 import { VendorCTA } from '@/components/home/VendorCTA';
 import { FeaturedVendors } from '@/components/home/FeaturedVendors';
 import { TrustFeatures } from '@/components/home/TrustFeatures';
@@ -53,16 +54,13 @@ export default function StoreHome() {
       
       {/* Trending Section */}
       <section className="mt-24 md:mt-32">
-        {trendingLoading ? (
-          <div className="max-w-7xl mx-auto px-6 h-64 bg-background-subtle animate-pulse rounded-3xl" />
-        ) : trendingProducts.length > 0 && (
-          <FeaturedProducts 
-            products={trendingProducts} 
-            title="Trending Now"
-            subtitle="The most popular items from our community this week."
-            viewAllHref="/products?trending=true"
-          />
-        )}
+        <FeaturedProducts 
+          products={trendingProducts} 
+          isLoading={trendingLoading}
+          title="Trending Now"
+          subtitle="The most popular items from our community this week."
+          viewAllHref="/products?trending=true"
+        />
       </section>
 
       {/* Featured Vendors */}
@@ -72,18 +70,15 @@ export default function StoreHome() {
 
       {/* Flash Sales Section */}
       <section className="mt-32">
-        {saleLoading ? (
-          <div className="max-w-7xl mx-auto px-6 h-64 bg-background-subtle animate-pulse rounded-3xl" />
-        ) : saleProducts.length > 0 && (
-          <div className="bg-background-subtle py-24">
-            <FeaturedProducts 
-              products={saleProducts} 
-              title="Flash Sales"
-              subtitle="Limited time offers from our verified partners."
-              viewAllHref="/products?on_sale=true"
-            />
-          </div>
-        )}
+        <div className={saleLoading || saleProducts.length > 0 ? "bg-background-subtle py-24" : ""}>
+          <FeaturedProducts 
+            products={saleProducts} 
+            isLoading={saleLoading}
+            title="Flash Sales"
+            subtitle="Limited time offers from our verified partners."
+            viewAllHref="/products?on_sale=true"
+          />
+        </div>
       </section>
 
       <div className="mt-10">

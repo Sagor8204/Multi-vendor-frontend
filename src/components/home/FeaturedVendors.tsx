@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { VendorService } from '@/services/vendor.service';
 import { BadgeCheck } from 'lucide-react';
+import { VendorSkeleton } from '@/components/ui/Skeleton';
 
 export const FeaturedVendors = () => {
   const { data: response, isLoading } = useQuery({
@@ -24,10 +25,7 @@ export const FeaturedVendors = () => {
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
         {isLoading ? (
           [1, 2, 3, 4, 5, 6].map(i => (
-            <div key={i} className="flex flex-col items-center space-y-4">
-              <div className="w-24 h-24 rounded-full bg-background-subtle animate-pulse" />
-              <div className="h-4 w-20 bg-background-subtle animate-pulse rounded" />
-            </div>
+            <VendorSkeleton key={i} />
           ))
         ) : (
           vendors.map((vendor) => (

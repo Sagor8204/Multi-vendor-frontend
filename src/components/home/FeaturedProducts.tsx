@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { ProductCard } from '@/components/products/ProductCard';
+import { ProductSkeleton } from '@/components/products/ProductSkeleton';
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
 
@@ -10,13 +11,15 @@ interface FeaturedProductsProps {
   title?: string;
   subtitle?: string;
   viewAllHref?: string;
+  isLoading?: boolean;
 }
 
 export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ 
   products, 
   title = "Featured Products",
   subtitle = "Curated selection of this week's top-performing items.",
-  viewAllHref = "/products"
+  viewAllHref = "/products",
+  isLoading = false
 }) => {
   return (
     <div className="max-w-7xl mx-auto px-6">
@@ -33,18 +36,22 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
       </div>
       
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
-        {products.map((product) => (
-          <ProductCard 
-            key={product.id}
-            id={product.id}
-            slug={product.slug}
-            name={product.name}
-            price={product.price}
-            category={product.category}
-            vendor={product.vendor}
-            image={product.image}
-          />
-        ))}
+        {isLoading ? (
+           [1, 2, 3, 4].map(i => <ProductSkeleton key={i} />)
+        ) : (
+          products.map((product) => (
+            <ProductCard 
+              key={product.id}
+              id={product.id}
+              slug={product.slug}
+              name={product.name}
+              price={product.price}
+              category={product.category}
+              vendor={product.vendor}
+              image={product.image}
+            />
+          ))
+        )}
       </div>
     </div>
   );

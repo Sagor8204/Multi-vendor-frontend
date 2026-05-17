@@ -4,6 +4,7 @@ import React, { useState, useMemo, useEffect, Suspense } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { ProductCard } from '@/components/products/ProductCard';
+import { ProductSkeleton } from '@/components/products/ProductSkeleton';
 import { ProductService, ProductListParams } from '@/services/product.service';
 import { CategoryService } from '@/services/category.service';
 import { Search, SlidersHorizontal, ChevronDown, LayoutGrid, List, X } from 'lucide-react';
@@ -350,9 +351,9 @@ function ProductsContent() {
           {/* Product Grid/List */}
           <div className="lg:col-span-9">
             {productsLoading ? (
-              <div className={`grid gap-6 md:gap-8 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
+              <div className={`grid gap-6 md:gap-8 ${viewMode === 'grid' ? 'grid-cols-2 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
                 {[1, 2, 3, 4, 5, 6].map(i => (
-                  <div key={i} className={`bg-white animate-pulse rounded-2xl border border-border/40 ${viewMode === 'grid' ? 'aspect-[4/5]' : 'h-48'}`} />
+                  <ProductSkeleton key={i} variant={viewMode} />
                 ))}
               </div>
             ) : products.length > 0 ? (

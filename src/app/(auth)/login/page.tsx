@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/hooks/useAuth';
 import { LogIn, ArrowRight } from 'lucide-react';
 
-export default function LoginPage() {
+function LoginContent() {
   const { login, isLoggingIn } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
@@ -114,4 +114,16 @@ export default function LoginPage() {
       </div>
     </div>
   );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background-subtle/30 flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
+  )
 }

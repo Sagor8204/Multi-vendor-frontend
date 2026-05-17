@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { CategoryCard } from '@/components/categories/CategoryCard';
 import { Laptop, Shirt, Home, Sparkles, ArrowRight, Package } from 'lucide-react';
 import { CategoryService } from '@/services/category.service';
+import { CategorySkeleton } from '@/components/ui/Skeleton';
 
 const getIconForCategory = (slug: string) => {
   const icons: Record<string, React.ReactNode> = {
@@ -40,7 +41,7 @@ export const HomeCategories = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {isLoading ? (
           [1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-64 rounded-3xl bg-background-subtle animate-pulse" />
+            <CategorySkeleton key={i} />
           ))
         ) : (
           categories.map((cat) => (
@@ -57,5 +58,3 @@ export const HomeCategories = () => {
     </section>
   );
 };
-
-
